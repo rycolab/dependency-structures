@@ -48,7 +48,7 @@ def extract_order_annotations(tree):
 	pass
 
 # tree to term (Chapter 3)
-def encode_proj(tree)
+def encode_proj(tree):
 	pass
 
 # term to tree (Chapter 3)
