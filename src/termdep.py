@@ -1,4 +1,6 @@
+from _typeshed import Self
 import pyconll
+import numpy as np
 
 class Tree(object):
 
@@ -6,12 +8,21 @@ class Tree(object):
         self.tree = tree
         self.root = root
 
+    def _tree_arr(self, tree, root=None):
+        if root is None: # If no root is specified, get first node with parent -1 (root)
+            root = [node for node in tree if node[0] == -1 ][0] 
+        children = [node for node in tree if node[0] == root[1]]
+        children_arr = [self.tree_arr(tree, root=node) for node in children]
+
+        return np.array()
+    
+    def _tree_arr_to_str(arr):
+        return ""
+
     def __str__(self):
-        """ TODO: add proper tree visualization here """
-        return str(self.tree)
+        return self._tree_arr_to_str(self._tree_str(self.tree))
 
     def __repr__(self):
-        """ TODO: add proper tree visualization here """
         return str(self)
 
     def __len__(self):
