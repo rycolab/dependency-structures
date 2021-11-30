@@ -58,5 +58,3 @@ class TreeBank(object):
                 continue
 
             yield dep
-
-    input()
