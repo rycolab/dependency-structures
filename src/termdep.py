@@ -47,10 +47,9 @@ class TreeBank(object):
                 if head == -1:
                     root = dep
 
-            assert root is not None
             dep = Tree(tuple(dep), root)
 
-            if broken:
+            if broken or root is None:
                 continue
 
             yield dep
