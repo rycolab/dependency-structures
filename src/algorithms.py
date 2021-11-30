@@ -29,7 +29,24 @@ def is_projective_naive(tree):
 
 # projectivity test (linear algorithm)
 def is_projective(tree):
-	pass
+
+	dep = decode_proj(encode_proj(tree))
+
+	dict1 = {}
+	dict2 = {}
+
+	for (h1,d1) in tree:
+		dict1[d1] = h1
+	
+	for (h1,d1) in dep:
+		dict2[d1] = h1
+
+
+	for i in range(len(tree)):
+		if dict1[i] != dict2[i]:
+			return False
+	
+	return True
 
 # pre-order collect (page 32)
 def pre_order_collect(tree):
@@ -48,7 +65,7 @@ def extract_order_annotations(tree):
 	pass
 
 # tree to term (Chapter 3)
-def encode_proj(tree)
+def encode_proj(tree):
 	pass
 
 # term to tree (Chapter 3)
