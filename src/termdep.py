@@ -11,7 +11,7 @@ class Tree(object):
         return str(self.tree)
 
     def __repr__(self):
-        """ TOOD: add proper tree visualization here """
+        """ TODO: add proper tree visualization here """
         return str(self)
 
     def __len__(self):
