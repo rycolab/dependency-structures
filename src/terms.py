@@ -24,3 +24,5 @@ class Term(object):
 	def __str__(self):
 		# TODO: visualization of the terms
 		return str(self)
+
+
