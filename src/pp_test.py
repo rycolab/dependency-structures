@@ -20,8 +20,8 @@ def main():
     matrix = tree.generate_matrix()
     print("vertices: " + str(size))
     print("depth:    " + str(depth))
-    print("test:     " + tree.text)
-    print("matrix:   " + str(matrix))
+    print("text:     " + tree.text)
+    # print("matrix:   " + str(matrix))
     print("matrix pp:\n" + Tree.string_of_matrix(matrix))
 
 
