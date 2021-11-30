@@ -6,6 +6,14 @@ class Tree(object):
     def __init__(self, tree, root):
         self.tree = tree
         self.root = root
+    
+    def size(self):
+        """ Find number of nodes of tree by finding highest number in list of pairs. """
+        largest = -1
+        for pair in self.tree:
+            largest = max(*pair, largest)
+        # add 1 because node 0 exists
+        return largest + 1
 
     def __str__(self):
         """ TODO: add proper tree visualization here """

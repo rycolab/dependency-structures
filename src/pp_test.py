@@ -1,4 +1,4 @@
-from src.termdep import Tree
+from termdep import Tree
 
 
 def main():
