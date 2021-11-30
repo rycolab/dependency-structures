@@ -56,9 +56,42 @@ def pre_order_collect(tree):
 def post_order_collect(tree):
 	pass
 
+
+def treelet_ordered_tree(tree):
+    t = {}
+    for (i,j) in tree:
+		
+        if i in t.keys():
+            t[i].append(j)
+        else:
+            t[i] = [j]
+    for i in len(tree):
+        if i in t.keys():
+            t[i].append(i)
+        else:
+            t[i] = [i]
+        t[i] = sorted(t[i])
+	return t
+
 # treelet-order collect (page 34)
 def treelet_order_collect(tree):
-	pass
+
+	order = treelet_ordered_tree(tree)
+
+	def toc(u):
+		l = []
+		for v in order[u]:
+			if v == u:
+				l.append(u)
+			else:
+				l += toc(v)
+		return l
+
+	toc(-1)
+
+
+
+    
 
 # Extract-Order-Annotations (page 29)
 def extract_order_annotations(tree):
