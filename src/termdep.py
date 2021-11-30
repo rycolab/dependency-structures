@@ -4,8 +4,9 @@ import argparse
 
 class Tree(object):
 
-    def __init__(self, tree):
+    def __init__(self, tree, root):
         self.tree = tree
+        self.root = root
 
     def __str__(self):
         """ TODO: add proper tree visualization here """
@@ -30,13 +31,24 @@ class TreeBank(object):
         """
         for n, sentence in enumerate(self.trees):
             
-            broken, dep = False, []
+            root = None
+            broken = False
+            dep = []
+
             for i, word in enumerate(sentence):
+
                 if word.head is None:
                     broken = True
                     break
-                dep.append((int(word.head)-1, i))
-            dep = Tree(tuple(dep))
+
+                head = int(word.head)-1
+                dep.append((head, i))
+
+                if head == -1:
+                    root = dep
+
+            assert root is not None
+            dep = Tree(tuple(dep), root)
 
             if broken:
                 continue
