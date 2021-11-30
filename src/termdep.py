@@ -1,6 +1,4 @@
 import pyconll
-import argparse
-
 
 class Tree(object):
 
@@ -15,6 +13,12 @@ class Tree(object):
     def __repr__(self):
         """ TOOD: add proper tree visualization here """
         return str(self)
+
+    def __len__(self):
+        return len(self.tree)
+
+    def __getitem__(self, i):
+        return self.tree[i]
 
 
 class TreeBank(object):
@@ -54,14 +58,5 @@ class TreeBank(object):
 
             yield dep
 
-
-# test code
-parser = argparse.ArgumentParser(description='Parse Dependency Parses as Terms')
-parser.add_argument('--trees')
-args = parser.parse_args()
-
-tb = TreeBank(args.trees)
-gen = tb.generator()
-for x in gen:
-    print(x)      
+    
     input()
