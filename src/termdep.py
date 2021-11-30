@@ -1,5 +1,6 @@
 import pyconll
 
+
 class Tree(object):
 
     def __init__(self, tree, root):
@@ -34,7 +35,7 @@ class TreeBank(object):
         -1 is a distinguished integer for the root 
         """
         for n, sentence in enumerate(self.trees):
-            
+
             root = None
             broken = False
             dep = []
@@ -58,5 +59,4 @@ class TreeBank(object):
 
             yield dep
 
-    
     input()
