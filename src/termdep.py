@@ -50,7 +50,7 @@ class Tree(object):
 
         # add buffer row of projection lines
         matrix[-2] = np.array(["┆" if c in self.node_column else " " for c in range(columns)])
-        
+
         # add text at the bottom
         matrix[-1] = np.array(list(self.text))
 
@@ -91,9 +91,9 @@ class Tree(object):
         This makes a matrix slightly bigger than it's children, checks if it is
         projective, and then returns a composite of the subtrees with the added symbols
         """
-        # If no root is specified, get first node with parent -1 (root)
+        # If no root is specified, get first node with parent self.root
         if root is None: 
-            root = [node for node in self.tree if node[0] == -1 ][0] 
+            root = [node for node in self.tree if node[0] == self.root ][0] 
         # Get children of node
         children = [node for node in self.tree if node[0] == root[1]]
 

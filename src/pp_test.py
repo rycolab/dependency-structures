@@ -3,7 +3,7 @@ import unittest
 
 class TestPrettyPrint(unittest.TestCase):
 
-    def test_easy_text_tree(self):
+    def test_easy_text_tree_1(self):
       
       ex_tree = ((2, 0), (2, 1), (-1, 2), (5, 3), (5, 4), (2, 5))
       ex_sentence = "This is a text with words"
@@ -19,6 +19,24 @@ class TestPrettyPrint(unittest.TestCase):
       self.assertEqual(tree.depth, 3)
       self.assertEqual(tree.text, ex_sentence)
       self.assertEqual(tree.node_column, [1,5,8,11,16,22])
+      self.assertEqual(str(tree), pp_string)
+
+    def test_easy_text_tree_2(self):
+
+      ex_tree = ((1, 0), (-1, 1), (3, 2), (1, 3))
+      ex_sentence = "Dan likes fresh fruit"
+      pp_string = \
+      " ┏━━━━O━━━━━━━━━━━┓  \n" + \
+      " O    ┆     ┏━━━━━O  \n" + \
+      " ┆    ┆     O     ┆  \n" + \
+      " ┆    ┆     ┆     ┆  \n" + \
+      "Dan likes fresh fruit\n"
+      
+      tree = Tree(ex_tree, -1, ex_sentence)
+      self.assertEqual(tree.size, 4)
+      self.assertEqual(tree.depth, 3)
+      self.assertEqual(tree.text, ex_sentence)
+      self.assertEqual(tree.node_column, [1,6,12,18])
       self.assertEqual(str(tree), pp_string)
 
     def test_easy_letter_tree(self):
@@ -49,8 +67,6 @@ class TestPrettyPrint(unittest.TestCase):
       "A B C D E F\n"
 
       tree = Tree(ex_tree, -1)
-      print()
-      print(tree)
       self.assertEqual(tree.size, 6)
       self.assertEqual(tree.depth, 3)
       self.assertEqual(tree.text, "A B C D E F")
