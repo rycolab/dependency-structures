@@ -12,38 +12,44 @@ class Tree(object):
         self.root = root
 
         # text preprocessesing and checks
-        if text is None:
-            # set "A B C ...", one letter per node
+        if text is None: # If no text is given, set "A B C ...", one letter per node
             text = " ".join([chr(i) for i in range(65, 65+self.size)])
-        text = text.strip('. \t')
+        self.text = text.strip('. \t')
 
         # Make sure the text and node amount is equal
-        words = text.count(" ") + 1
+        words = self.text.count(" ") + 1
         if words != self.size:
-            raise ValueError("Graph and text don't fit together.")
+            raise ValueError("Graph and text don't fit together. " + \
+                f"Expected {words} nodes but got {self.size}")
         
         self.node_column = []
         acc = -1 # start at -1 because index starts at 0, and ceil gives at least 1
-        for word in text.split(' '):
+        for word in self.text.split(' '):
             self.node_column.append(int(acc + np.ceil( len(word)/2 )))
             acc += len(word) + 1
-        self.text = text
 
     def _generate_matrix(self) -> "np.array":
         """
         Generate a suitable 2D matrix for pretty printing.
         `text` is already inserted as last row.
         """
-        # rows: two per node, one for text
         depth = self.depth
-        m, l, r = self._tree_arr(depth)
+        m, l, r = self._tree_arr(depth) # Get tree part of the matrix in np.array form
+
+        # make final matrix
         rows = depth + 2
         columns = len(self.text)
         matrix = np.full((rows, columns), ' ')
+
+        # insert top part of matrix with tree
         for i in range(depth):
             matrix[i][l:r] = m[i][0:r-l]
+
+        # add buffer row of projection lines
         matrix[-2] = np.array(["┆" if c in self.node_column else " " for c in range(columns)])
+        # add text at te bottom
         matrix[-1] = np.array(list(self.text))
+
         return matrix
 
     @property
@@ -65,7 +71,7 @@ class Tree(object):
 
     def __dfs(self, root) -> int:
         """
-        Gives depth starting from root node.
+        Internal method that gives depth starting from root node.
         Warning: Due to list representation of edges, this is slow. """
         max_depth = 0
         for parent, node in self.tree:
