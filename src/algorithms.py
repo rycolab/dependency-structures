@@ -88,7 +88,8 @@ def treelet_order_collect(tree):
 				l += toc(v)
 		return l
 
-	toc(-1)
+	return toc(-1)
+	
 
 
 
