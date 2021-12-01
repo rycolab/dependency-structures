@@ -1,4 +1,6 @@
-from _typeshed import Self
+# from _typeshed import Self
+from numpy.char import array
+from numpy.lib.function_base import append
 import pyconll
 import numpy as np
 
@@ -8,45 +10,52 @@ class Tree(object):
         """ `text` is used for pretty printing only. """
         self.tree = tree
         self.root = root
+
         # text preprocessesing and checks
         text = text.strip('. \t')
         if text == "":
             # set "A B C ...", one letter per node
             text = " ".join([chr(i) for i in range(65, 65+self.size())])
+
+        # Make sure the text and node amount is equal
         words = text.count(" ") + 1
         if words != self.size():
             raise ValueError("Graph and text don't fit together.")
+        
+        self.node_column = []
+        acc = 0
+        for word in text.split(' '):
+            self.node_column.append(acc + np.ceil( len(word)/2 ))
+            acc += len(word) + 1
         self.text = text
 
     @staticmethod
-    def string_of_matrix(matrix: "list[list[str]]") -> str:
-        # rows: two per node, one for text
-        # return (*matrix)
-        # return matrix
+    def string_of_matrix(matrix: "np.array") -> str:
+        """
+        Generates a string from a matrix with every row as a line
+        """
         string = ""
-        for row in matrix:
-            string += ''.join(row)
-            string += "\n"
+        for row in matrix[:]:
+            string += ''.join(row) + "\n"
         return string
 
-    def generate_matrix(self) -> "list[list[str]]":
+    def generate_matrix(self) -> "np.array":
         """
         Generate a suitable 2D matrix for pretty printing.
         `text` is already inserted as last row.
         """
         # rows: two per node, one for text
-        rows = 2 * self.depth() + 1
+        rows = self.depth() + 2
         columns = len(self.text)
-        matrix = [['.' for _ in range(columns)] for _ in range(rows)]
-        matrix[rows-1] = self.text
+        matrix = np.full((rows, columns), ' ')
+        matrix[-1] = np.array(list(self.text))
         return matrix
 
     def size(self) -> int:
         """
-        Size without artificial root.
         Works, because every vertex only has one inbound edge.
         """
-        return len(self.tree) - 1
+        return len(self.tree)
 
     def depth(self) -> int:
         """
@@ -69,8 +78,20 @@ class Tree(object):
         if root is None: # If no root is specified, get first node with parent -1 (root)
             root = [node for node in tree if node[0] == -1 ][0] 
         children = [node for node in tree if node[0] == root[1]]
-        children_arr = [self.tree_arr(tree, root=node) for node in children]
 
+        if len(children) == 0: # If there are no children, then it is a leaf node
+            return np.array([['O']])
+
+        # get matrices of children
+        children_arr = [self.tree_arr(tree, root=node) for node in children]
+        width_children = [arr.shape[1] for arr in children_arr]
+        if sum(width_children) > len(self.text): # Check if matrix is non-projective
+            raise ValueError("Only projetive trees have been implemented yet")
+        
+        children_columns = [self.node_column[child[1]] for child in children]
+        np.full((max(children_columns) - min(children_columns), max()))
+        
+        
         return np.array()
     
     def _tree_arr_to_str(arr):
