@@ -16,7 +16,7 @@ class Tree(object):
         "t_intersection":           '┳',
         "r_corner":                 '┓',
         "projection":               '┆',
-        "projection_intersection":  '┿' 
+        "projection_intersection":  '┿'
     }
 
     def __init__(self, tree, root, text=None):
@@ -61,13 +61,6 @@ class Tree(object):
 
         # draw projection lines
         matrix = self._add_projection_lines(matrix, c, depth)
-
-        # add buffer row of projection lines
-        matrix[-2] = np.array(
-            [self.sym_tbl["projection"]
-                if c in self.node_column
-                else self.sym_tbl["empty"]
-                for c in range(columns)])
 
         # add text at the bottom
         matrix[-1] = np.array(list(self.text))
@@ -150,7 +143,8 @@ class Tree(object):
         right_most = max(root_pos + 1, right_most)
 
         # create return matrix
-        matrix = np.full((depth, int(right_most-left_most)), self.sym_tbl["empty"])
+        matrix = np.full((depth, int(right_most-left_most)),
+                         self.sym_tbl["empty"])
 
         # put children subtrees into matrix
         for m, l, r, _ in children_arr:
@@ -166,15 +160,19 @@ class Tree(object):
                 all_children.append((node, node_row + 1))
 
         # connect nodes:
-        matrix[0] = np.full(int(right_most-left_most), self.sym_tbl["h_edge"])  # horizontal lines
+        matrix[0] = np.full(int(right_most-left_most),
+                            self.sym_tbl["h_edge"])  # horizontal lines
         for col in children_columns:
-            matrix[0][col - left_most] = self.sym_tbl["t_intersection"]  # node connectors
+            # node connectors
+            matrix[0][col - left_most] = self.sym_tbl["t_intersection"]
         if children_columns[0] < root_pos:
             # leftmost connector
-            matrix[0][children_columns[0] - left_most] = self.sym_tbl["l_corner"]
+            matrix[0][children_columns[0] -
+                      left_most] = self.sym_tbl["l_corner"]
         if children_columns[-1] > root_pos:
             # rightmost connector
-            matrix[0][children_columns[-1] - left_most] = self.sym_tbl["r_corner"]
+            matrix[0][children_columns[-1] -
+                      left_most] = self.sym_tbl["r_corner"]
 
         # put in node
         matrix[0][root_pos-left_most] = self.sym_tbl["node"]
@@ -199,6 +197,9 @@ class Tree(object):
         for node, row in nodes:
             for i in range(row+1, depth):
                 add_proj_line(i, self.node_column[node])
+
+        # add buffer row of projection lines
+        matrix[-2][self.node_column] = self.sym_tbl["projection"]
 
         return matrix
 
