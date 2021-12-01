@@ -62,7 +62,7 @@ def treelet_ordered_tree(tree):
 	for (i,j) in tree:	
 		if i in t.keys():
 			t[i].append(j)
-        	else:
+		else:
 			t[i] = [j]
 		
 	for i in len(tree):
