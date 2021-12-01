@@ -21,7 +21,7 @@ class TestPrettyPrint(unittest.TestCase):
       self.assertEqual(size, 6)
       self.assertEqual(depth, 3)
       self.assertEqual(ex_sentence, tree.text)
-      self.assertEqual([2,6,9,12,17,23], tree.words_center)
+      self.assertEqual([1,5,8,11,16,22], tree.node_column)
       self.assertEqual(pp_string, pp_matrix)
 
 if __name__ == '__main__':

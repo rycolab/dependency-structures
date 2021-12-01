@@ -4,6 +4,13 @@
  ┆    ┆     ┆     ┆
 Dan likes fresh fruit
 
+.........................
+ ┏━━━┳━━O━━━━━━━━━━━━━┓  
+ O   O  ┆  ┏━━━━┳━━━━━O  
+ ┆   ┆  ┆  O    O     ┆  
+ ┆   ┆  ┆  ┆    ┆     ┆  
+This is a text with words
+
   O━┓
 ┏━┿━O
 O ┆ ┆
