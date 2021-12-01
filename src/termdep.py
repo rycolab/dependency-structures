@@ -34,7 +34,7 @@ class Tree(object):
         `text` is already inserted as last row.
         """
         depth = self.depth
-        m, l, r = self._tree_arr(depth) # Get tree part of the matrix in np.array form
+        m, l, r, c = self._tree_matrix(depth) # Get tree part of the matrix in np.array form
 
         # make final matrix
         rows = depth + 2
@@ -45,9 +45,13 @@ class Tree(object):
         for i in range(depth):
             matrix[i][l:r] = m[i][0:r-l]
 
+        # draw projection lines
+        matrix = self._add_projection_lines(matrix, c, depth)
+
         # add buffer row of projection lines
         matrix[-2] = np.array(["┆" if c in self.node_column else " " for c in range(columns)])
-        # add text at te bottom
+        
+        # add text at the bottom
         matrix[-1] = np.array(list(self.text))
 
         return matrix
@@ -80,7 +84,7 @@ class Tree(object):
                 max_depth = max(max_depth, partial_depth)
         return max_depth + 1
 
-    def _tree_arr(self, depth, root=None):
+    def _tree_matrix(self, depth, root=None):
         """
         This function uses recursion to build each subtree from a given node.
         If no node is given, it is assumed that the root node is requested.
@@ -105,16 +109,20 @@ class Tree(object):
             # Generate node with prejectivity lines at correct depth
             matrix = np.full((depth, 1), '┆')
             matrix[0][0] = 'O'
-            return matrix, self.node_column[root[1]], self.node_column[root[1]] + 1
+            return (
+                matrix,
+                self.node_column[root[1]],
+                self.node_column[root[1]] + 1,
+                [(root[1], 0)] )
 
         # get matrices of children and get columns of children
-        children_arr = [self._tree_arr(depth - 1, node) for node in children]
+        children_arr = [self._tree_matrix(depth - 1, node) for node in children]
         children_columns = [self.node_column[node] for _, node in children]
 
         # check that children fit side to side
         left_most = min(root_pos, children_arr[0][1])
         right_most = 0
-        for _, left, right in children_arr:
+        for _, left, right, _ in children_arr:
             if left < right_most:
                 raise ValueError("Only projetive trees have been implemented yet")
             right_most = right
@@ -124,10 +132,16 @@ class Tree(object):
         matrix = np.full((depth, int(right_most-left_most)), ' ')
 
         # put children subtrees into matrix
-        for m, l, r in children_arr:
+        for m, l, r, _ in children_arr:
             for i in range(depth - 1):
                 local_left = int(l - left_most)
                 matrix[i+1][local_left:int(local_left + r-l)] = m[i][0:int(r-l)]
+
+        # add all children in subtrees to an array
+        all_children = []
+        for _, l, _, c in children_arr:
+            for node, node_row in c:
+                all_children.append((node, node_row + 1))
 
         # connect nodes:
         matrix[0] = np.full(int(right_most-left_most), '━') # horizontal lines
@@ -139,16 +153,36 @@ class Tree(object):
             matrix[0][children_columns[-1] - left_most] = '┓' # rightmost connector
 
         # projection lines:
-        for r in range(depth):
-            if matrix[r][root_pos-left_most] == '━':
-                matrix[r][root_pos-left_most] = '┿'
-            else:
-                matrix[r][root_pos-left_most] = '┆'
+        # for r in range(depth):
+        #     if matrix[r][root_pos-left_most] == '━':
+        #         matrix[r][root_pos-left_most] = '┿'
+        #     else:
+        #         matrix[r][root_pos-left_most] = '┆'
         
         # put in node
         matrix[0][root_pos-left_most] = 'O'
 
-        return matrix, left_most, right_most
+        return matrix, left_most, right_most, [(root[1], 0)] + all_children
+
+    def _add_projection_lines(self, matrix, nodes, depth):
+        """
+        Add projection lines for each node
+        """
+        # helper function to convert projection lines
+        projection_lines = {
+            ' ': '┆',
+            '┆': '┆',
+            '━': '┿'
+        }
+        def add_proj_line(row, col):
+            matrix[row][col] = projection_lines[matrix[row][col]]
+
+        # add projection lines downwards from each node
+        for node, row in nodes:
+            for i in range(row+1, depth):
+                add_proj_line(i, self.node_column[node])
+
+        return matrix
 
     def __str__(self):
         """
