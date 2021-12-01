@@ -55,7 +55,7 @@ class Tree(object):
         columns = len(self.text)
         matrix = np.full((rows, columns), self.sym_tbl["empty"])
 
-        # insert top part of matrix with tree
+        # insert top part of matrix with tree using block matrix operation
         matrix[:depth, l:r] = m
 
         # draw projection lines
@@ -177,28 +177,23 @@ class Tree(object):
             self.sym_tbl["h_edge"]:     self.sym_tbl["projection_intersection"]
         }
 
-        def add_proj_line(row, col):
-            matrix[row][col] = projection_lines[matrix[row][col]]
+        def add_proj_line(elem):
+            return projection_lines[elem]
 
-        # add projection lines downwards from each node
+        # add projection lines downwards from each node, including buffer
         for node, row in nodes:
-            for i in range(row+1, depth):
-                add_proj_line(i, self.node_column[node])
-
-        # add buffer row of projection lines
-        matrix[-2][self.node_column] = self.sym_tbl["projection"]
-
+            fr, lr = row+1, depth+1
+            column = self.node_column[node]
+            matrix[fr:lr, column] = np.vectorize(add_proj_line)(matrix[fr:lr, column])
+                
         return matrix
 
     def __str__(self):
         """
         Generates a string from a matrix with every row as a line
         """
-        string = ""
         matrix = self._generate_matrix()
-        for row in matrix:
-            string += ''.join(row) + "\n"
-        return string
+        return ''.join([''.join(row) + '\n' for row in matrix])
 
     def __repr__(self):
         return str(self)
