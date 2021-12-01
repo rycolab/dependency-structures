@@ -6,16 +6,16 @@ import numpy as np
 
 
 class Tree(object):
-    def __init__(self, tree: "tuple[tuple[int,int], ...]", root: int, text: str = ""):
+    def __init__(self, tree: "tuple[tuple[int,int], ...]", root: int, text: str = None):
         """ `text` is used for pretty printing only. """
         self.tree = tree
         self.root = root
 
         # text preprocessesing and checks
-        text = text.strip('. \t')
-        if text == "":
+        if text is None:
             # set "A B C ...", one letter per node
             text = " ".join([chr(i) for i in range(65, 65+self.size())])
+        text = text.strip('. \t')
 
         # Make sure the text and node amount is equal
         words = text.count(" ") + 1
