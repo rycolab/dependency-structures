@@ -6,7 +6,7 @@ import numpy as np
 
 
 class Tree(object):
-    def __init__(self, tree: "tuple[tuple[int,int], ...]", root: int, text: str = None):
+    def __init__(self, tree, root, text = None):
         """ `text` is used for pretty printing only. """
         self.tree = tree
         self.root = root
@@ -14,12 +14,12 @@ class Tree(object):
         # text preprocessesing and checks
         if text is None:
             # set "A B C ...", one letter per node
-            text = " ".join([chr(i) for i in range(65, 65+self.size())])
+            text = " ".join([chr(i) for i in range(65, 65+self.size)])
         text = text.strip('. \t')
 
         # Make sure the text and node amount is equal
         words = text.count(" ") + 1
-        if words != self.size():
+        if words != self.size:
             raise ValueError("Graph and text don't fit together.")
         
         self.node_column = []
@@ -29,23 +29,13 @@ class Tree(object):
             acc += len(word) + 1
         self.text = text
 
-    @staticmethod
-    def string_of_matrix(matrix: "np.array") -> str:
-        """
-        Generates a string from a matrix with every row as a line
-        """
-        string = ""
-        for row in matrix[:]:
-            string += ''.join(row) + "\n"
-        return string
-
-    def generate_matrix(self) -> "np.array":
+    def _generate_matrix(self) -> "np.array":
         """
         Generate a suitable 2D matrix for pretty printing.
         `text` is already inserted as last row.
         """
         # rows: two per node, one for text
-        depth = self.depth()
+        depth = self.depth
         m, l, r = self._tree_arr(depth)
         rows = depth + 2
         columns = len(self.text)
@@ -56,12 +46,15 @@ class Tree(object):
         matrix[-1] = np.array(list(self.text))
         return matrix
 
+    @property
     def size(self) -> int:
         """
+        Gives number of edges in tree
         Works, because every vertex only has one inbound edge.
         """
         return len(self.tree)
 
+    @property
     def depth(self) -> int:
         """
         Return the depth of the tree (excluding artificial root node).
@@ -70,8 +63,10 @@ class Tree(object):
         res = self.__dfs(self.root)
         return res - 1
 
-    def __dfs(self, root: int) -> int:
-        """ Warning: Due to list representation of edges, this is slow. """
+    def __dfs(self, root) -> int:
+        """
+        Gives depth starting from root node.
+        Warning: Due to list representation of edges, this is slow. """
         max_depth = 0
         for parent, node in self.tree:
             if parent == root:
@@ -89,6 +84,7 @@ class Tree(object):
         # If no root is specified, get first node with parent -1 (root)
         if root is None: 
             root = [node for node in self.tree if node[0] == -1 ][0] 
+        # Get children of node
         children = [node for node in self.tree if node[0] == root[1]]
 
         # get root position
@@ -100,6 +96,7 @@ class Tree(object):
 
         # If there are no children, then it is a leaf node
         if len(children) == 0: 
+            # Generate node with prejectivity lines at correct depth
             matrix = np.full((depth, 1), '┆')
             matrix[0][0] = 'O'
             return matrix, self.node_column[root[1]], self.node_column[root[1]] + 1
@@ -137,7 +134,10 @@ class Tree(object):
 
         # projection lines:
         for r in range(depth):
-            matrix[r][root_pos-left_most] = '┆'
+            if matrix[r][root_pos-left_most] == '━':
+                matrix[r][root_pos-left_most] = '┿'
+            else:
+                matrix[r][root_pos-left_most] = '┆'
         
         # put in node
         matrix[0][root_pos-left_most] = 'O'
@@ -145,7 +145,14 @@ class Tree(object):
         return matrix, left_most, right_most
 
     def __str__(self):
-        return self.string_of_matrix(self.generate_matrix())
+        """
+        Generates a string from a matrix with every row as a line
+        """
+        string = ""
+        matrix = self._generate_matrix()
+        for row in matrix:
+            string += ''.join(row) + "\n"
+        return string
 
     def __repr__(self):
         return str(self)
