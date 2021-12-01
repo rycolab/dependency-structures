@@ -65,6 +65,9 @@ def treelet_ordered_tree(tree):
 			t[i] = [i]
 		t[i].append(j)
 	
+	for i in len(tree):
+		t[i] = sorted(t[i])
+	
 	return t
 
 # treelet-order collect (page 34)
