@@ -59,18 +59,11 @@ def post_order_collect(tree):
 
 def treelet_ordered_tree(tree):
 	t = {}
-	for (i,j) in tree:	
-		if i in t.keys():
-			t[i].append(j)
-		else:
-			t[i] = [j]
-		
-	for i in len(tree):
-		if i in t.keys():
-			t[i].append(i)
-		else:
+	
+	for (i,j) in tree:
+		if i not in t.keys():
 			t[i] = [i]
-		t[i] = sorted(t[i])
+		t[i].append(j)
 	
 	return t
 
