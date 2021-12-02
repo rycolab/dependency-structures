@@ -17,12 +17,7 @@ def is_projective_naive(tree):
     """
     for h1, d1 in tree:
         for h2, d2 in tree:
-            # cases (i) and (ii)
-            # if h1 < h2 and ((h2 < d1 < d2) or (d2 < d1 < h2)):
-            #     return False
-            # # cases (iii) and (iv)
-            # if d2 < d1 and ((d2 < h1 < h2) or (h2 < h1 < d2)):
-            #     return False
+            # cases i), ii), iii), iv)
             if h1 < h2 < d1 < d2 or h1 < d2 < d1 < h2 or d2 < h1 < h2 < d1 or h2 < h1 < d2 < d1:
                 return False
     return True
