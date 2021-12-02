@@ -22,8 +22,16 @@ nonproj4 = ((2, 0), (-1, 1), (1, 2), (0, 3))
 nonproj5 = ((0, 2), (1, 0), (-1, 1))
 nonproj6 = ((0, 2), (3, 4), (-1, 0), (4, 1), (2, 3))
 
-pre1 = ((0,1),(-1,0),(1,2),(2,3),(0,4))
+poc1 = ((0, 1), (-1, 0), (1, 2), (2, 3), (0, 4))
 
+missingroot1 = ((0, 1), (1, 2), (2, 3), (0, 4))
+doublydependent1 = ((2, 1), (-1, 2), (2, 5), (2, 3), (1, 0), (5, 4), (4, 3))
+notconnected1 = ((2, 3), (-1, 0), (3, 2), (0, 1))
+notconnected2 = ((2, 4), (-1, 0), (3, 2), (0, 1), (4, 3))
+tworoots1 = ((1, 2), (2, 3), (4, 1), (5, 4), (5, 7), (8, 5), (7, 6), (-1, 6), (1, 0), (-1, 8), (8, 13), (13, 9), (10, 11), (13, 12), (13, 10))
+doubleedge1 = ((-1, 0), (5, 4), (1, 5), (0, 1), (2, 3), (1, 5), (4, 2))
+missingdependency1 = ((2, 1), (3, 2), (-1, 3), (3, 9), (3, 5), (5, 4), (5, 6), (6, 8), (8, 7))
+missingdependency2 = ((1, 0), (-1, 1), (1, 3), (3, 2), (1, 4), (4, 7), (7, 5))
 
 class TestProjectivity(unittest.TestCase):
 
@@ -60,10 +68,35 @@ class TestProjectivity(unittest.TestCase):
     #     self.assertEqual(is_projective(nonproj6), False)
 
     def test_pre_order_collect(self):
-        self.assertEqual(pre_order_collect(pre1), [0, 1, 2, 3, 4])
+        self.assertEqual(pre_order_collect(poc1), [0, 1, 2, 3, 4])
 
     def test_post_order_collect(self):
-        self.assertEqual(post_order_collect(pre1), [3, 2, 1, 4, 0])
+        self.assertEqual(post_order_collect(poc1), [3, 2, 1, 4, 0])
+
+    def test_is_well_formed(self):
+        self.assertEqual(is_well_formed(proj1), True)
+        self.assertEqual(is_well_formed(proj2), True)
+        self.assertEqual(is_well_formed(proj3), True)
+        self.assertEqual(is_well_formed(proj4), True)
+        self.assertEqual(is_well_formed(proj5), True)
+        self.assertEqual(is_well_formed(proj6), True)
+        self.assertEqual(is_well_formed(proj7), True)
+        self.assertEqual(is_well_formed(proj8), True)
+        self.assertEqual(is_well_formed(nonproj1), True)
+        self.assertEqual(is_well_formed(nonproj2), True)
+        self.assertEqual(is_well_formed(nonproj3), True)
+        self.assertEqual(is_well_formed(nonproj4), True)
+        self.assertEqual(is_well_formed(nonproj5), True)
+        self.assertEqual(is_well_formed(nonproj6), True)
+        self.assertEqual(is_well_formed(poc1), True)
+        self.assertEqual(is_well_formed(missingroot1), False)
+        self.assertEqual(is_well_formed(doublydependent1), False)
+        self.assertEqual(is_well_formed(notconnected1), False)
+        self.assertEqual(is_well_formed(notconnected2), False)
+        self.assertEqual(is_well_formed(tworoots1), False)
+        self.assertEqual(is_well_formed(doubleedge1), False)
+        self.assertEqual(is_well_formed(missingdependency1), False)
+        self.assertEqual(is_well_formed(missingdependency2), False)
 
 
 if __name__ == '__main__':
