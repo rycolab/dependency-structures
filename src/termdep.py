@@ -14,6 +14,7 @@ class Tree(object):
         "v_edge":                   '┃',
         "l_corner":                 '┏',
         "t_intersection":           '┳',
+        "cross_intersection":       '╋',
         "r_corner":                 '┓',
         "projection":               '┆',
         "projection_intersection":  '┿'
@@ -46,11 +47,11 @@ class Tree(object):
         Generate a suitable 2D matrix for pretty printing.
         `text` is already inserted as last row.
         """
-        depth = self.depth
         # Get tree part of the matrix in np.array form
-        m, l, r, depth, cd = self._tree_matrix(depth)
+        m, l, r, cd = self._tree_matrix()
 
         # make final matrix
+        depth = len(m)
         rows = depth + 2
         columns = len(self.text)
         matrix = np.full((rows, columns), self.sym_tbl["empty"])
@@ -94,7 +95,7 @@ class Tree(object):
                 max_depth = max(max_depth, partial_depth)
         return max_depth + 1
 
-    def _tree_matrix(self, depth, root=None):
+    def _tree_matrix(self, root=None):
         """
         This function uses recursion to build each subtree from a given node.
         If no node is given, it is assumed that the root node is requested.
@@ -113,59 +114,98 @@ class Tree(object):
         # get root position
         root_pos = self.node_column[root[1]]
 
-        # check depth value
-        if depth == 0:
-            raise ValueError("Depth has wrong value")
-            
         # Get children of node
         children = [node for node in self.tree if node[0] == root[1]]
 
         # If there are no children, then it is a leaf node
         if len(children) == 0:
             # Generate node matrix with correct depth
-            matrix = np.full((depth, 1), self.sym_tbl["empty"])
-            matrix[0][0] = self.sym_tbl["node"]
-            return matrix, root_pos, root_pos + 1, depth, [(root[1], 0)]
+            matrix = np.array([self.sym_tbl["node"]])
+            return matrix, root_pos, root_pos + 1, {root[1]: 0}
 
         # get matrices of children and get columns of children
-        children_arr = [self._tree_matrix(depth - 1, node) for node in children]
+        children_arr = [self._tree_matrix(node) for node in children]
 
         # check that children fit side to side
-        left_most = min(root_pos, children_arr[0][1])
-        right_most = 0
-        for _, left, right, _,_ in children_arr:
-            if left < right_most:
-                raise ValueError("Only projetive trees have been implemented yet")
-            right_most = right
-        right_most = max(root_pos + 1, right_most)
+        prev_right = 0
+        max_depth = 0
+        for m, l, r, _ in children_arr:
+            if l < prev_right:
+                max_depth += len(m)
+            else:
+                max_depth = max(max_depth, len(m))
+            prev_right = r
 
-        # create return matrix
-        matrix = np.full((depth, right_most - left_most), self.sym_tbl["empty"])
-
-        # iterate of children to add sub-matrices to resulting matrix
-        for m, l, r, _,_ in children_arr:
-            # add sub-matrices to resulting matrix
-            matrix[1:depth, l - left_most:r - left_most] = m
-        
-        children_depth = [(node, row + 1) for _,_,_,_, cd in children_arr for (node, row) in cd]
+        # find leftmost and rightmost node. This assumes the node list is ordered from left to right
+        left_most = min(root_pos, min([l for _,l,_,_ in children_arr]))
+        right_most = max(root_pos + 1, max([r for _,_,r,_ in children_arr]))
 
         # connect nodes:
-        children_columns = [self.node_column[node] - left_most for _, node in children]
+        children_columns = [self.node_column[node] -
+                            left_most for _, node in children]
 
-        # initialize horizontal lines
-        matrix[0] = np.full(int(right_most-left_most), self.sym_tbl["h_edge"])
+        # create return matrix
+        matrix = np.full((max_depth + 1, right_most -
+                         left_most), self.sym_tbl["empty"])
+
+        # iterate of children to add sub-matrices to resulting matrix
+        prev_right = 0
+        prev_depth_floor = 1
+        prev_depth_ceil = 1
+        children_depth = {}
+        # add vertical edges
+        v_edges = {
+            self.sym_tbl["empty"]:      self.sym_tbl["v_edge"],
+            self.sym_tbl["node"]:       self.sym_tbl["node"],
+            self.sym_tbl["h_edge"]:     self.sym_tbl["cross_intersection"]
+        }
+        for (m, l, r, cd), col in zip(children_arr, children_columns):
+            if l < prev_right:  # if subtree overlaps with previous tree, draw it lower
+                rows_floor, rows_ceil = prev_depth_ceil, prev_depth_ceil + \
+                    len(m)
+
+                # update depth floor and ceiling to new value
+                prev_depth_floor = prev_depth_ceil
+                prev_depth_ceil += len(m)
+            else:  # else, draw it normally
+                rows_floor, rows_ceil = prev_depth_floor, prev_depth_floor + \
+                    len(m)
+
+                # update ceiling to new value
+                prev_depth_ceil = max(
+                    prev_depth_floor + len(m), prev_depth_ceil)
+
+            # add sub-matrices to resulting matrix
+            matrix[rows_floor:rows_ceil, l - left_most:r - left_most] = m
+            prev_right = r
+
+            # add vertical edges
+            if prev_depth_floor > 1:
+                matrix[1:prev_depth_floor, col] = np.vectorize(
+                    lambda x: v_edges[x])(matrix[1:prev_depth_floor, col])
+
+            children_depth.update(
+                {k: v + prev_depth_floor for k, v in cd.items()})
+
+        # find left and right ends of the edge
+        edge_left = min(root_pos - left_most, children_columns[0])
+        edge_right = max(root_pos - left_most, children_columns[-1])
+
+        # add horizontal edges
+        matrix[0][edge_left:edge_right] = self.sym_tbl["h_edge"]
 
         # add intersections for nodes, and coners for the edges
         matrix[0][children_columns] = self.sym_tbl["t_intersection"]
-        if children_columns[0] < root_pos - left_most: # leftmost connector
-            matrix[0][children_columns[0]] = self.sym_tbl["l_corner"]
-        if children_columns[-1] > root_pos - left_most: # rightmost connector
-            matrix[0][children_columns[-1]] = self.sym_tbl["r_corner"]
+        matrix[0][edge_left] = self.sym_tbl["l_corner"]
+        matrix[0][edge_right] = self.sym_tbl["r_corner"]
 
         # put in node
         matrix[0][root_pos-left_most] = self.sym_tbl["node"]
 
-        return matrix, left_most, right_most, depth, [(root[1], 0)] + children_depth
+        # add node to children_depth
+        children_depth[root[1]] = 0
+
+        return matrix, left_most, right_most, children_depth
 
     def _add_projection_lines(self, matrix, nodes, depth):
         """
@@ -173,6 +213,7 @@ class Tree(object):
         """
         # helper function to convert projection lines
         projection_lines = {
+            self.sym_tbl["node"]:       self.sym_tbl["node"],
             self.sym_tbl["empty"]:      self.sym_tbl["projection"],
             self.sym_tbl["h_edge"]:     self.sym_tbl["projection_intersection"]
         }
@@ -181,11 +222,12 @@ class Tree(object):
             return projection_lines[elem]
 
         # add projection lines downwards from each node, including buffer
-        for node, row in nodes:
+        for (node, row) in nodes.items():
             fr, lr = row+1, depth+1
             column = self.node_column[node]
-            matrix[fr:lr, column] = np.vectorize(add_proj_line)(matrix[fr:lr, column])
-                
+            matrix[fr:lr, column] = np.vectorize(
+                add_proj_line)(matrix[fr:lr, column])
+
         return matrix
 
     def __str__(self):
