@@ -28,9 +28,9 @@ def is_well_formed(tree):
     # find the root and create adjacency list
     root = -1
     children = {}
-    vertices = set([])
+    vertices = []
     for parent, child in tree:
-        vertices.add(child)
+        vertices.append(child)
         if parent == -1:
             if root != -1:
                 # multiple root pointers bad
@@ -45,9 +45,14 @@ def is_well_formed(tree):
                 children[parent].append(child)
         else:
             children[parent] = [child]
+        if child not in children.keys():
+            children[child] = []
 
-    if len(tree) != len(vertices):
+    if len(tree) != len(set(vertices)):
         # there should be n unique nodes as well as n edges
+        return False
+
+    if max(vertices) != len(vertices)-1:
         return False
 
     # if there is no root pointer, return false
