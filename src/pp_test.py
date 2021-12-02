@@ -122,12 +122,49 @@ class TestPrettyPrint(unittest.TestCase):
       "A B C D E F\n"
 
       tree = Tree(ex_tree, -1)
-      print("from here:")
-      print(tree)
       self.assertEqual(tree.size, 6)
       self.assertEqual(tree.depth, 3)
       self.assertEqual(tree.text, "A B C D E F")
       self.assertEqual(tree.node_column, [0, 2, 4, 6, 8, 10])
+      self.assertEqual(str(tree), pp_string)
+
+    def test_hard_non_projective_tree_3(self):
+
+      ex_tree = ((2, 0), (0, 1), (-1, 2), (4, 3), (2, 4), (2, 5), (2, 6), (0, 7), (6, 8))
+      pp_string = \
+      "┏━━━O━━━┳━┳━┓    \n" + \
+      "O━┳━┿━━━╋━╋━╋━┓  \n" + \
+      "┆ O ┆   ┃ ┃ ┃ O  \n" + \
+      "┆ ┆ ┆ ┏━O O O━┿━┓\n" + \
+      "┆ ┆ ┆ O ┆ ┆ ┆ ┆ O\n" + \
+      "┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆\n" + \
+      "A B C D E F G H I\n"
+
+      tree = Tree(ex_tree, -1)
+      self.assertEqual(tree.size, 9)
+      self.assertEqual(tree.depth, 3)
+      self.assertEqual(tree.text, "A B C D E F G H I")
+      self.assertEqual(tree.node_column, [0, 2, 4, 6, 8, 10, 12, 14, 16])
+      self.assertEqual(str(tree), pp_string)
+
+    def test_hard_non_projective_tree_3(self):
+
+      ex_tree = ((1, 0), (2, 1), (-1, 2), (4, 3), (2, 4), (2, 5), (2, 6), (0, 7), (6, 8))
+      pp_string = \
+      "  ┏━O━━━┳━┳━┓    \n" + \
+      "┏━O ┆   ┃ ┃ ┃    \n" + \
+      "O━┿━┿━━━╋━╋━╋━┓  \n" + \
+      "┆ ┆ ┆   ┃ ┃ ┃ O  \n" + \
+      "┆ ┆ ┆ ┏━O O O━┿━┓\n" + \
+      "┆ ┆ ┆ O ┆ ┆ ┆ ┆ O\n" + \
+      "┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆\n" + \
+      "A B C D E F G H I\n"
+
+      tree = Tree(ex_tree, -1)
+      self.assertEqual(tree.size, 9)
+      self.assertEqual(tree.depth, 4)
+      self.assertEqual(tree.text, "A B C D E F G H I")
+      self.assertEqual(tree.node_column, [0, 2, 4, 6, 8, 10, 12, 14, 16])
       self.assertEqual(str(tree), pp_string)
 
 if __name__ == '__main__':

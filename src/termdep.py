@@ -130,15 +130,15 @@ class Tree(object):
         prev_right = 0
         max_depth = 0
         for m, l, r, _ in children_arr:
-            if l < prev_right:
+            if l < prev_right:  # if there is overlap, add bellow previous
                 max_depth += len(m)
             else:
                 max_depth = max(max_depth, len(m))
             prev_right = r
 
-        # find leftmost and rightmost node. This assumes the node list is ordered from left to right
-        left_most = min(root_pos, min([l for _,l,_,_ in children_arr]))
-        right_most = max(root_pos + 1, max([r for _,_,r,_ in children_arr]))
+        # find leftmost and rightmost node
+        left_most = min(root_pos, min([l for _, l, _, _ in children_arr]))
+        right_most = max(root_pos + 1, max([r for _, _, r, _ in children_arr]))
 
         # connect nodes:
         children_columns = [self.node_column[node] -
@@ -148,19 +148,22 @@ class Tree(object):
         matrix = np.full((max_depth + 1, right_most -
                          left_most), self.sym_tbl["empty"])
 
-        # iterate of children to add sub-matrices to resulting matrix
+        # iterate of children to add sub-matrices to resulting matrix and 
+        # add children depth to new depth dictionary
         prev_right = 0
         prev_depth_floor = 1
         prev_depth_ceil = 1
         children_depth = {}
-        # add vertical edges
+        # definitions on how to draw vertical edges
         v_edges = {
             self.sym_tbl["empty"]:      self.sym_tbl["v_edge"],
-            self.sym_tbl["node"]:       self.sym_tbl["node"],
             self.sym_tbl["h_edge"]:     self.sym_tbl["cross_intersection"]
         }
+
         for (m, l, r, cd), col in zip(children_arr, children_columns):
-            if l < prev_right:  # if subtree overlaps with previous tree, draw it lower
+            # if subtree overlaps with previous tree, draw it lower, else
+            # draw on the same level
+            if l < prev_right:  
                 rows_floor, rows_ceil = prev_depth_ceil, prev_depth_ceil + \
                     len(m)
 
@@ -177,6 +180,8 @@ class Tree(object):
 
             # add sub-matrices to resulting matrix
             matrix[rows_floor:rows_ceil, l - left_most:r - left_most] = m
+
+            #update prev_right
             prev_right = r
 
             # add vertical edges
@@ -184,6 +189,7 @@ class Tree(object):
                 matrix[1:prev_depth_floor, col] = np.vectorize(
                     lambda x: v_edges[x])(matrix[1:prev_depth_floor, col])
 
+            # add adjusted children depth to new depth
             children_depth.update(
                 {k: v + prev_depth_floor for k, v in cd.items()})
 
@@ -213,7 +219,6 @@ class Tree(object):
         """
         # helper function to convert projection lines
         projection_lines = {
-            self.sym_tbl["node"]:       self.sym_tbl["node"],
             self.sym_tbl["empty"]:      self.sym_tbl["projection"],
             self.sym_tbl["h_edge"]:     self.sym_tbl["projection_intersection"]
         }
