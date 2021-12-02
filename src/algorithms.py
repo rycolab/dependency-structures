@@ -22,6 +22,60 @@ def is_projective_naive(tree):
                 return False
     return True
 
+
+# tests if a tree is well formed
+def is_well_formed(tree):
+    # find the root and create adjacency list
+    root = -1
+    children = {}
+    vertices = set([])
+    for parent, child in tree:
+        vertices.add(child)
+        if parent == -1:
+            if root != -1:
+                # multiple root pointers bad
+                return False
+            root = child
+
+        # add to adjacency list
+        if parent in children.keys():
+            if child not in children[parent]:
+                # if this is false it would mean a duplicate edge, which we can handle
+                # otherwise append
+                children[parent].append(child)
+        else:
+            children[parent] = [child]
+
+    if len(tree) != len(vertices):
+        # there should be n unique nodes as well as n edges
+        return False
+
+    # if there is no root pointer, return false
+    if root == -1:
+        return False
+
+    # perform dfs to check if graph is connected
+    visited = [False]*len(vertices)
+
+    def dfs(u):
+        visited[u] = True
+
+        for v in children[u]:
+            if visited[v]:
+                return False
+            else:
+                if not dfs(v):
+                    return False
+        return True
+
+    if not dfs(root):
+        return False
+
+    for b in visited:
+        if not b:
+            return False
+    return True
+
 # projectivity test (linear algorithm)
 
 
