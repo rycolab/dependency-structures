@@ -235,6 +235,10 @@ class Tree(object):
 
         return matrix
 
+    def is_projective(self):
+        matrix = self._generate_matrix()
+        return not '┿' in matrix and not '╋' in matrix
+
     def __str__(self):
         """
         Generates a string from a matrix with every row as a line
