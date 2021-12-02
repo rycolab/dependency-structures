@@ -58,6 +58,7 @@ def is_projective(tree):
 
 
 def pre_order_collect(tree):
+    # algorithm according to book
     children = {}
     for (i, j) in tree:
         if i in children.keys():
@@ -66,7 +67,7 @@ def pre_order_collect(tree):
             children[i] = [j]
         if j not in children.keys():
             children[j] = []
-    
+
     def poc(u):
         l = []
         if u != -1:
@@ -75,12 +76,13 @@ def pre_order_collect(tree):
             l += poc(v)
         return l
     return poc(-1)
-    
+
 
 # post-order collect (page 32)
 
 
 def post_order_collect(tree):
+    # algorithm according to book
     children = {}
     for (i, j) in tree:
         if i in children.keys():
@@ -89,7 +91,7 @@ def post_order_collect(tree):
             children[i] = [j]
         if j not in children.keys():
             children[j] = []
-    
+
     def poc(u):
         l = []
         for v in children[u]:
