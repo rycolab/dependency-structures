@@ -1,15 +1,15 @@
 
 def is_projective_naive(tree):
-    """ 
+    """
     The following algorithm tests whether the input tree is
-    projective in a naive way, i.e., it runs in quadratic time 
+    projective in a naive way, i.e., it runs in quadratic time
     rather than linear.
 
     The naive algorithm works as follows.
     For every head--dependency pair (h1, d1),
-    we check whether there exists another head--dependency 
-    pair (h2, d2) that could interleave in a non-projective way. 
-    Since we conider all pairs, we only need to consider four cases: 
+    we check whether there exists another head--dependency
+    pair (h2, d2) that could interleave in a non-projective way.
+    Since we conider all pairs, we only need to consider four cases:
     i)   h1, h2, d1, d2
     ii)  h1, d2, d1, h2
     iii) d2, h1, h2, d1
@@ -27,19 +27,29 @@ def is_projective_naive(tree):
 
 def is_projective(tree):
 
+    # according to chapter 3.3.2, we can test whether a dependency structure D is projective
+    # by computing D' := dep(term(D)), i.e. using the algorithms from the book to turn D first
+    # into a term and them this term back into a dependency structure.
+    # D is isomorphic to D' if and only if D is projective
+
+    # O(n), see algorithms & proofs in book
     dep = decode_proj(encode_proj(tree))
 
+    # we test the equality/isomorphism of tree and dep by checking whether for all nodes in
+    # tree and dep, their parents match
     dict1 = {}
     dict2 = {}
 
-    for (h1, d1) in tree:
+    # dict1 contains for every node d1 from tree its parent h1
+    for (h1, d1) in tree:  # O(n)
         dict1[d1] = h1
 
-    for (h1, d1) in dep:
+    # dict2 contains for every node d2 from dep its parent h2
+    for (h1, d1) in dep:  # O(n)
         dict2[d1] = h1
 
-    for i in range(len(tree)):
-        if dict1[i] != dict2[i]:
+    for i in range(len(tree)):  # O(n)
+        if dict1[i] != dict2[i]:  # dict lookup in python is O(1) on average
             return False
 
     return True
@@ -58,6 +68,12 @@ def post_order_collect(tree):
 
 
 def treelet_ordered_tree(tree):
+    # returns a dictionary that encodes a treelet ordered tree
+    # in the dictionary, each node u in the tree is annotated with a list that
+    # contains the nodes in the treelet rooted at u in the intended order. the
+    # "intended order" in our case is just the numerical ordering of the
+    # nodes
+
     t = {}
     for (i, j) in tree:
         if i in t.keys():
@@ -78,7 +94,7 @@ def treelet_ordered_tree(tree):
 
 
 def treelet_order_collect(tree):
-
+    # algorithm from book
     order = treelet_ordered_tree(tree)
 
     def toc(u):
