@@ -42,6 +42,46 @@ class TestPrettyPrint(unittest.TestCase):
         self.assertEqual(str(tree), pp_string)
         self.assertTrue(tree.is_projective())
 
+    def test_medium_text_tree_1(self):
+
+        ex_tree = ((5, 0), (4, 1), (3, 2), (4, 3), (5, 4), (-1, 5))
+        ex_sentence = "Jan Marie Wim lesen helfen sah"
+        pp_string = \
+            " ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━O \n" + \
+            " O    ┏━━━━━━━━━┳━━━━━O     ┆ \n" + \
+            " ┆    O    ┏━━━━O     ┆     ┆ \n" + \
+            " ┆    ┆    O    ┆     ┆     ┆ \n" + \
+            " ┆    ┆    ┆    ┆     ┆     ┆ \n" + \
+            "Jan Marie Wim lesen helfen sah\n"
+
+        tree = Tree(ex_tree, -1, ex_sentence)
+        self.assertEqual(tree.size, 6)
+        self.assertEqual(tree.depth, 4)
+        self.assertEqual(tree.text, ex_sentence)
+        self.assertEqual(tree.node_column, [1, 6, 11, 16, 22, 28])
+        self.assertEqual(str(tree), pp_string)
+        self.assertTrue(tree.is_projective())
+
+    def test_medium_text_tree_2(self):
+
+        ex_tree = ((3, 0), (4, 1), (5, 2), (-1, 3), (3, 4), (4, 5))
+        ex_sentence = "Jan Marie Wim zag helpen lezen"
+        pp_string = \
+            " ┏━━━━━━━━━━━━━O━━━━┓         \n" + \
+            " O    ┏━━━━━━━━┿━━━━O━━━━━━┓  \n" + \
+            " ┆    O    ┏━━━┿━━━━┿━━━━━━O  \n" + \
+            " ┆    ┆    O   ┆    ┆      ┆  \n" + \
+            " ┆    ┆    ┆   ┆    ┆      ┆  \n" + \
+            "Jan Marie Wim zag helpen lezen\n"
+
+        tree = Tree(ex_tree, -1, ex_sentence)
+        self.assertEqual(tree.size, 6)
+        self.assertEqual(tree.depth, 4)
+        self.assertEqual(tree.text, ex_sentence)
+        self.assertEqual(tree.node_column, [1, 6, 11, 15, 20, 27])
+        self.assertEqual(str(tree), pp_string)
+        self.assertFalse(tree.is_projective())
+
     def test_easy_letter_tree(self):
 
         ex_tree = ((3, 0), (0, 1), (0, 2), (-1, 3), (5, 4), (3, 5))
@@ -52,7 +92,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 6)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D E F")
@@ -70,7 +110,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 6)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D E F")
@@ -88,7 +128,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 6)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D E F")
@@ -108,7 +148,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 6)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D E F")
@@ -128,7 +168,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 6)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D E F")
@@ -149,7 +189,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F G H I\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 9)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D E F G H I")
@@ -171,7 +211,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F G H I\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 9)
         self.assertEqual(tree.depth, 4)
         self.assertEqual(tree.text, "A B C D E F G H I")
@@ -194,7 +234,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆ ┆\n" + \
             "A B C D E F G H I\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 9)
         self.assertEqual(tree.depth, 5)
         self.assertEqual(tree.text, "A B C D E F G H I")
@@ -213,7 +253,7 @@ class TestPrettyPrint(unittest.TestCase):
             "┆ ┆ ┆ ┆\n" + \
             "A B C D\n"
 
-        tree = Tree(ex_tree, -1)
+        tree = Tree(ex_tree)
         self.assertEqual(tree.size, 4)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D")

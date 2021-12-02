@@ -20,7 +20,7 @@ class Tree(object):
         "projection_intersection":  '┿'
     }
 
-    def __init__(self, tree, root, text=None):
+    def __init__(self, tree, root=-1, text=None):
         """ `text` is used for pretty printing only. """
         self.tree = tree
         self.root = root
