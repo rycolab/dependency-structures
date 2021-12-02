@@ -22,7 +22,9 @@ class Tree(object):
 
     def __init__(self, tree, root=-1, text=None):
         """ `text` is used for pretty printing only. """
-        self.tree = tree
+        tree = list(tree)
+        tree.sort(key=(lambda x: x[1]))
+        self.tree = tuple(tree)
         self.root = root
 
         # text preprocessesing and checks
@@ -194,8 +196,8 @@ class Tree(object):
                 {k: v + prev_depth_floor for k, v in cd.items()})
 
         # find left and right ends of the edge
-        edge_left = min(root_pos - left_most, children_columns[0])
-        edge_right = max(root_pos - left_most, children_columns[-1])
+        edge_left = min(root_pos - left_most, min(children_columns))
+        edge_right = max(root_pos - left_most, max(children_columns))
 
         # add horizontal edges
         matrix[0][edge_left:edge_right] = self.sym_tbl["h_edge"]
