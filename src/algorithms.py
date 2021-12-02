@@ -48,13 +48,46 @@ def is_projective(tree):
 
 
 def pre_order_collect(tree):
-    pass
+    children = {}
+    for (i, j) in tree:
+        if i in children.keys():
+            children[i].append(j)
+        else:
+            children[i] = [j]
+        if j not in children.keys():
+            children[j] = []
+    
+    def poc(u):
+        l = []
+        if u != -1:
+            l.append(u)
+        for v in children[u]:
+            l += poc(v)
+        return l
+    return poc(-1)
+    
 
 # post-order collect (page 32)
 
 
 def post_order_collect(tree):
-    pass
+    children = {}
+    for (i, j) in tree:
+        if i in children.keys():
+            children[i].append(j)
+        else:
+            children[i] = [j]
+        if j not in children.keys():
+            children[j] = []
+    
+    def poc(u):
+        l = []
+        for v in children[u]:
+            l += poc(v)
+        if u != -1:
+            l.append(u)
+        return l
+    return poc(-1)
 
 
 def treelet_ordered_tree(tree):

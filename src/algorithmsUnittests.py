@@ -20,6 +20,8 @@ nonproj4 = ((2, 0), (-1, 1), (1, 2), (0, 3))
 nonproj5 = ((0, 2), (1, 0), (-1, 1))
 nonproj6 = ((0, 2), (3, 4), (-1, 0), (4, 1), (2, 3))
 
+pre1 = ((0,1),(-1,0),(1,2),(2,3),(0,4))
+
 
 class TestProjectivity(unittest.TestCase):
 
@@ -54,6 +56,12 @@ class TestProjectivity(unittest.TestCase):
     #     self.assertEqual(is_projective(nonproj4), False)
     #     self.assertEqual(is_projective(nonproj5), False)
     #     self.assertEqual(is_projective(nonproj6), False)
+
+    def test_pre_order_collect(self):
+        self.assertEqual(pre_order_collect(pre1), [0, 1, 2, 3, 4])
+
+    def test_post_order_collect(self):
+        self.assertEqual(post_order_collect(pre1), [3, 2, 1, 4, 0])
 
 
 if __name__ == '__main__':
