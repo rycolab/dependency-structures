@@ -214,8 +214,6 @@ class TestPrettyPrint(unittest.TestCase):
             "A B C D\n"
 
         tree = Tree(ex_tree, -1)
-        print()
-        print(tree)
         self.assertEqual(tree.size, 4)
         self.assertEqual(tree.depth, 3)
         self.assertEqual(tree.text, "A B C D")
