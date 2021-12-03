@@ -62,7 +62,7 @@ def encode_proj(tree):
             if node == root:
                 oa = oa.insert(i,0)
             else:
-                lst.append(term(annotation))
+                lst.append(term(node))
 
         return Term(tuple(oa), tuple(lst))
 
