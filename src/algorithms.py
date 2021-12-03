@@ -49,14 +49,21 @@ def treelet_order_collect(tree):
 def extract_order_annotations(tree):
 	"""
 	The following algorithm extracts the order annotations 
-	of the given tree in linear time
+	of the given tree in linear time. 
+	Given a tree, it returns a list of order annotations as lists 
+	according to its precedence.
+	e.g. for the tree ((-1, 2), (1, 0), (2, 1), (2, 3)) 
+	it returns [[0], [0,1], [1,2,3], [3]]
 	"""
-	prec = [None] * len(tree)
+	prec = [None] * len(tree) 
 	order = [None] * len(tree)
+
+	#Fill out precedence array
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
 		order[u] = []
+	#Calculate the order
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
@@ -66,23 +73,30 @@ def extract_order_annotations(tree):
 
 # tree to term (Chapter 3)
 def encode_proj(tree):
-    order_annotations = extract_order_annotations(tree)
 
-    # constructs the term of the tree rooted at root
-    def term(root):
-        oa = [j+1 for j in range(len(order_annotations[root])-1)] # functor of term
-        lst = [] # list of children
+	rootnode = -1
+	order_annotations = extract_order_annotations(tree)
 
-        for i, node in enumerate(order_annotations[root]):
-            if node == root: # insert 0 at position of parent in the oa
-                oa = oa.insert(i,0)
-            else: # create term for child
-                lst.append(term(node))
+	for u in range(len(tree)):
+		(h, d) = tree[u]
+		if h == -1 :
+			rootnode = u
 
-        return Term(tuple(oa), tuple(lst))
+	def term(root): 
+		oa = [j+1 for j in range(len(order_annotations[root])-1)]
+		lst = []
 
-    return term(tree.root)
+		for i, node in enumerate(order_annotations[root]):
+			if node == root:
+				oa = oa.insert(i,0)
+			else:
+				lst.append(term(node))
+		
+		return Term(tuple(oa), tuple(lst))
+
+	return term(rootnode)
 
 # term to tree (Chapter 3)
 def decode_proj(term):
+
 	pass
