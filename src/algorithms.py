@@ -51,16 +51,16 @@ def extract_order_annotations(tree):
 	The following algorithm extracts the order annotations 
 	of the given tree in linear time
 	"""
-	prec = [None] * len(tree)
-	order = [None] * len(tree)
+	prec = [None for i in len(tree)]
+	order = [[] for i in len(tree)]
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
-			order[prec[h]] = order[prec[h]] + "" + d  
-		order[prec[x]] = order[prec[x]] + "" + d 
+			order[prec[h]] = order[prec[h]].append(d)  
+		order[prec[x]] = order[prec[x]].append(d)
 	return order
 
 # tree to term (Chapter 3)
@@ -73,9 +73,9 @@ def encode_proj(tree):
         lst = [] # list of children
 
         for i, node in enumerate(order_annotations[root]):
-            if node == root:
+            if node == root: # insert 0 at position of parent in the oa
                 oa = oa.insert(i,0)
-            else:
+            else: # create term for child
                 lst.append(term(node))
 
         return Term(tuple(oa), tuple(lst))
