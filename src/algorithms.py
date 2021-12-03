@@ -60,8 +60,8 @@ def extract_order_annotations(tree):
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
-			order[prec[h]].append(d)  
-		order[prec[x]].append(d)
+			order[h].append(d)  
+		order[x].append(d)
 	return order
 
 # tree to term (Chapter 3)
