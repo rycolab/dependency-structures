@@ -51,11 +51,12 @@ def extract_order_annotations(tree):
 	The following algorithm extracts the order annotations 
 	of the given tree in linear time
 	"""
-	prec = [None for i in len(tree)]
-	order = [[] for i in len(tree)]
+	prec = [None] * len(tree)
+	order = [None] * len(tree)
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
+		order[u] = []
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
