@@ -47,7 +47,21 @@ def treelet_order_collect(tree):
 
 # Extract-Order-Annotations (page 29)
 def extract_order_annotations(tree):
-	pass
+	"""
+	The following algorithm extracts the order annotations 
+	of the given tree in linear time
+	"""
+	prec = [None] * len(tree)
+	order = [None] * len(tree)
+	for u in range(len(tree)):
+		(h, d) = tree[u]
+		prec[d] = u
+	for x in range(len(prec)):
+		(h, d) = tree[prec[x]]
+		if h != -1 :
+			order[prec[h]] = order[prec[h]] + "" + d  
+		order[prec[x]] = order[prec[x]] + "" + d 
+	return order
 
 # tree to term (Chapter 3)
 def encode_proj(tree):
