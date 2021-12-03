@@ -84,4 +84,4 @@ def encode_proj(tree):
 
 # term to tree (Chapter 3)
 def decode_proj(term):
-	return
+	pass
