@@ -51,30 +51,18 @@ def extract_order_annotations(tree):
 
 # tree to term (Chapter 3)
 def encode_proj(tree):
-    children = {}
-    # constructs a dictionary that maps each node to a list of its children
-    for (i,j) in tree.tree:
-        if i not in children.keys():
-            children[i] = [j]
-        else:
-            children[i].append(j)
-    
+    order_annotations = extract_order_annotations(tree)
+
     # constructs the term of the tree rooted at root
     def term(root):
-        if root not in children.keys():
-            return Term((0),())
+        oa = [j+1 for j in range(len(order_annotations[root])-1)] # functor of term
+        lst = [] # list of children
 
-        treelet = children[root].sort()
-        smaller = 0 # counts children with smaller
-        lst = [] # list of the children
-
-        for i in range(len(treelet)):
-            if treelet[i] < root:
-                smaller += 1
-            lst.append(term(treelet[i]))
-
-        # constructs order annotation of term
-        oa = [i+1 for i in range(treelet)].insert(smaller,0)
+        for i, node in enumerate(order_annotations[root]):
+            if node == root:
+                oa = oa.insert(i,0)
+            else:
+                lst.append(term(annotation))
 
         return Term(tuple(oa), tuple(lst))
 
@@ -82,4 +70,4 @@ def encode_proj(tree):
 
 # term to tree (Chapter 3)
 def decode_proj(term):
-	pass
+	return
