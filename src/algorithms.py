@@ -84,11 +84,11 @@ def encode_proj(tree):
 
 	def term(root): 
 		oa = [j+1 for j in range(len(order_annotations[root])-1)]
-		lst = []
+		lst = [None]
 
 		for i, node in enumerate(order_annotations[root]):
 			if node == root:
-				oa = oa.insert(i,0)
+				oa.insert(i,0)
 			else:
 				lst.append(term(node))
 		
