@@ -1,3 +1,5 @@
+from terms import Term
+from termdep import Tree
 
 def is_projective_naive(tree):
 	""" 
@@ -49,7 +51,34 @@ def extract_order_annotations(tree):
 
 # tree to term (Chapter 3)
 def encode_proj(tree):
-	pass
+    children = {}
+    # constructs a dictionary that maps each node to a list of its children
+    for (i,j) in tree.tree:
+        if i not in children.keys():
+            children[i] = [j]
+        else:
+            children[i].append(j)
+    
+    # constructs the term of the tree rooted at root
+    def term(root):
+        if root not in children.keys():
+            return Term((0),())
+
+        treelet = children[root].sort()
+        smaller = 0 # counts children with smaller
+        lst = [] # list of the children
+
+        for i in range(len(treelet)):
+            if treelet[i] < root:
+                smaller += 1
+            lst.append(term(treelet[i]))
+
+        # constructs order annotation of term
+        oa = [i+1 for i in range(treelet)].insert(smaller,0)
+
+        return Term(tuple(oa), tuple(lst))
+
+    return term(tree.root)
 
 # term to tree (Chapter 3)
 def decode_proj(term):
