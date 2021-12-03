@@ -73,9 +73,9 @@ def encode_proj(tree):
         lst = [] # list of children
 
         for i, node in enumerate(order_annotations[root]):
-            if node == root:
+            if node == root: # insert 0 at position of parent in the oa
                 oa = oa.insert(i,0)
-            else:
+            else: # create term for child
                 lst.append(term(node))
 
         return Term(tuple(oa), tuple(lst))
