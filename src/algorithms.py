@@ -1,3 +1,5 @@
+from terms import Term
+from termdep import Tree
 
 def is_projective_naive(tree):
     """
@@ -205,16 +207,86 @@ def treelet_order_collect(tree):
 
 # Extract-Order-Annotations (page 29)
 def extract_order_annotations(tree):
-    pass
+	"""
+	The following algorithm extracts the order annotations 
+	of the given tree in linear time. 
+	Given a tree, it returns a list of order annotations as lists 
+	according to its precedence.
+	e.g. for the tree ((-1, 2), (1, 0), (2, 1), (2, 3)) 
+	it returns [[0], [0,1], [1,2,3], [3]]
+	"""
+	prec = [None] * len(tree) 
+	order = [None] * len(tree)
+
+	#Fill out precedence array
+	for u in range(len(tree)):
+		(h, d) = tree[u]
+		prec[d] = u
+		order[u] = []
+	#Calculate the order
+	for x in range(len(prec)):
+		(h, d) = tree[prec[x]]
+		if h != -1 :
+			order[h].append(d)  
+		order[x].append(d)
+	return order
 
 # tree to term (Chapter 3)
+def encode_proj_old(tree):
+	"""
+	The following algorithm extracts the order annotations 
+	of the given tree in linear time. 
+	Given a tree, it returns a list of order annotations as lists 
+	according to its precedence.
+	e.g. for the tree ((-1, 2), (1, 0), (2, 1), (2, 3)) 
+	it returns [[0], [0,1], [1,2,3], [3]]
+	"""
+	prec = [None] * len(tree) 
+	order = [None] * len(tree)
+
+	#Fill out precedence array
+	for u in range(len(tree)):
+		(h, d) = tree[u]
+		prec[d] = u
+		order[u] = []
+
+	#Calculate the order
+	for x in range(len(prec)):
+		(h, d) = tree[prec[x]]
+		if h != -1 :
+			order[h].append(d)  
+		order[x].append(d)
+	return order
 
 
+# tree to term (Chapter 3)
 def encode_proj(tree):
-    pass
+
+	rootnode = -1
+	order_annotations = extract_order_annotations(tree)
+
+	for u in range(len(tree)):
+		(h, d) = tree[u]
+		if h == -1 :
+			rootnode = u
+
+	def term(root): 
+		oa = [j+1 for j in range(len(order_annotations[root])-1)]
+		lst = [None]
+
+		for i, node in enumerate(order_annotations[root]):
+			if node == root:
+				oa.insert(i,0)
+			else:
+				lst.append(term(node))
+		
+		return Term(tuple(oa), tuple(lst))
+
+	return term(rootnode)
 
 # term to tree (Chapter 3)
 
 
 def decode_proj(term):
-    pass
+	pass
+

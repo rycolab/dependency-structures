@@ -106,3 +106,41 @@ class TestProjectivity(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+=======
+ord1 = [[0, 4], [1, 3], [2], [2, 3], [1, 4]]
+ord2 = [[0,1], [1, 2], [2]]
+ord3 = [[0, 1], [1,2], [2], [0, 3]]
+ord4 = [[0,1], [1,5], [2,3], [3], [2,4], [4,5]]
+ord5 = [[0], [0,1], [1,2], [2,3,5,9], [4], [4,5,6], [6,8], [7], [7,8], [9]]
+ord6 = [[0], [0,1,2], [2,3], [3], [1,4], [4,5,7], [6], [6,7],
+         [5,8,13], [9], [10, 11], [11], [12], [9,10,12,13]]
+ord7 = [[0], [0, 1], [1,2,3,5], [3], [4], [4, 5]]
+ord8 = [[0], [0,1,3,4], [2], [2,3], [4, 6], [5], [5, 6]]
+
+term1 = Term((0, 1), Term((1, 0), Term((0, 1), Term((1,0), Term((0), ())))))
+
+class TestAlgorithms(unittest.TestCase):
+
+    def test_extract_order_annotations(self):
+        self.assertEqual(extract_order_annotations(proj1), ord1)
+        self.assertEqual(extract_order_annotations(proj2), ord2)
+        self.assertEqual(extract_order_annotations(proj3), ord3)
+        self.assertEqual(extract_order_annotations(proj4), ord4)
+        self.assertEqual(extract_order_annotations(proj5), ord5)
+        self.assertEqual(extract_order_annotations(proj6), ord6)
+        self.assertEqual(extract_order_annotations(proj7), ord7)
+        self.assertEqual(extract_order_annotations(proj8), ord8)
+    
+    def test_extract_order_annotations(self):
+        def compare_terms(term0, term1):
+            self.assertTupleEqual(term0.oa, term1.oa)
+            self.assertEqual(len(term0.lst), len(term1.lst))
+            for i in range(len(term0.lst)):
+                compare_terms(term0.lst[i], term1.lst[i])
+
+        compare_terms(encode_proj(proj1), term1)
+        
+
+if __name__ == '__main__':
+    unittest.main()
+
