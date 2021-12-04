@@ -23,7 +23,7 @@ class Term(object):
 
 	def __str__(self):
 		# TODO: visualization of the terms
-		return str(self)
+		return str(self.oa)
 
 	def __len__(self):
 		return len(self.lst)
