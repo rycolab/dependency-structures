@@ -211,13 +211,13 @@ def extract_order_annotations(tree):
 	prec = [None] * len(tree) 
 	order = [None] * len(tree)
 
-	# Fill out precedence array
+	# fill out precedence array
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
 		order[u] = []
 
-	# Calculate the order
+	# calculate the order
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
@@ -280,6 +280,7 @@ def encode_proj(tree):
 
 		# sanity check
 		assert len(oa) == len(lst)
+		
 		return Term(tuple(oa), tuple(lst))
 
 	return term(rootnode)
