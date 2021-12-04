@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 # from _typeshed import Self
 # from numpy.char import array
 from numpy.lib.function_base import append
@@ -245,6 +248,8 @@ class Tree(object):
         """
         Generates a string from a matrix with every row as a line
         """
+        # TODO: this breaks on Ryan's machine
+        return ""
         matrix = self._generate_matrix()
         return ''.join([''.join(row) + '\n' for row in matrix])
 
