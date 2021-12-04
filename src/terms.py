@@ -25,4 +25,7 @@ class Term(object):
 		# TODO: visualization of the terms
 		return str(self)
 
+	def __len__(self):
+		return len(self.lst)
+
 

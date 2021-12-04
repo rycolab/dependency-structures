@@ -84,8 +84,6 @@ def is_well_formed(tree):
     return True
 
 # projectivity test (linear algorithm)
-
-
 def is_projective(tree):
 
     # according to chapter 3.3.2, we can test whether a dependency structure D is projective
@@ -116,8 +114,6 @@ def is_projective(tree):
     return True
 
 # pre-order collect (page 32)
-
-
 def pre_order_collect(tree):
     # algorithm according to book
     children = {}
@@ -140,8 +136,6 @@ def pre_order_collect(tree):
 
 
 # post-order collect (page 32)
-
-
 def post_order_collect(tree):
     # algorithm according to book
     children = {}
@@ -186,9 +180,8 @@ def treelet_ordered_tree(tree):
 
     return t
 
+
 # treelet-order collect (page 34)
-
-
 def treelet_order_collect(tree):
     # algorithm from book
     order = treelet_ordered_tree(tree)
@@ -218,12 +211,13 @@ def extract_order_annotations(tree):
 	prec = [None] * len(tree) 
 	order = [None] * len(tree)
 
-	#Fill out precedence array
+	# Fill out precedence array
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
 		order[u] = []
-	#Calculate the order
+
+	# Calculate the order
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
@@ -244,13 +238,13 @@ def encode_proj_old(tree):
 	prec = [None] * len(tree) 
 	order = [None] * len(tree)
 
-	#Fill out precedence array
+	# Fill out precedence array
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
 		order[u] = []
 
-	#Calculate the order
+	# Calculate the order
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
@@ -285,8 +279,6 @@ def encode_proj(tree):
 	return term(rootnode)
 
 # term to tree (Chapter 3)
-
-
 def decode_proj(term):
 	pass
 
