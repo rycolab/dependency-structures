@@ -280,7 +280,7 @@ def encode_proj(tree):
 
 		# sanity check
 		assert len(oa) == len(lst)
-		
+
 		return Term(tuple(oa), tuple(lst))
 
 	return term(rootnode)
@@ -312,3 +312,37 @@ def decode_proj(term):
 	deps = []
 	descend(term, counter, level, deps)
 	return tuple(deps)
+
+
+# TODO: Kuhlmann and Satta (2009)
+def annotate_l(tree):
+	pass
+
+# analogus to the above, should be combined into one method
+def annotator_r(tree):
+	pass
+
+def lcas(tree):
+	""" 
+	Least common ancestor. Can be done in O(|pi|) time.
+	See Kuhlmann and Satta (2009)
+	"""
+	pass
+
+# TODO: Page 38
+def block_order_collect(order):
+	pass
+
+def encode_block(tree):
+	pass
+
+def decode_block(tree):
+	pass
+
+# Chapter 5
+def is_weakly_nonprojective(tree):
+	pass
+
+# Chapter 5
+def is_wellnested(tree):
+	pass
