@@ -1,7 +1,6 @@
 import unittest
 from unittest.main import main
 from algorithms import *
-from termdep import Tree
 
 # projective trees
 proj = []
@@ -52,9 +51,7 @@ class TestRoundTrip(unittest.TestCase):
 
 	def test_proj(self):
 		# projective unit test
-		print()
 		for tree1 in proj:
-			print(Tree(tree1))
 			term = encode_proj(tree1)
 			tree2 = decode_proj(term)
 			self.same(tree1, tree2)

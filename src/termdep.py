@@ -277,7 +277,7 @@ class TreeBank(object):
         The ordering of the pairs does not matter.
         -1 is a distinguished integer for the root
         """
-        for n, sentence in enumerate(self.trees):
+        for sentence in self.trees:
 
             root = None
             broken = False
