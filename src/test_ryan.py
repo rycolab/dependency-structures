@@ -1,3 +1,4 @@
+import unittest
 from algorithms import *
 
 # projective trees
@@ -45,16 +46,22 @@ def diff(lst1, lst2):
 	assert tmp(lst1, lst2)
 
 
-# projective unit test
-for tree1 in proj:
-	term = encode_proj(tree1)
-	tree2 = decode_proj(term)
-	same(tree1, tree2)
 
-# non-projective unit test
-for tree1 in nonproj:
-	term = encode_proj(tree1)
-	tree2 = decode_proj(term)
-	diff(tree1, tree2)
+class TestRoundTrip(unittest.TestCase):
+
+
+	def test_projective(self):
+		# projective unit test
+		for tree1 in proj:
+			term = encode_proj(tree1)
+			tree2 = decode_proj(term)
+			self.assertEqual(same(tree1, tree2), True)
+
+	def test_nonprojective(self):
+		# non-projective unit test
+		for tree1 in nonproj:
+			term = encode_proj(tree1)
+			tree2 = decode_proj(term)
+			self.assertEqual(diff(tree1, tree2), True)
 
 
