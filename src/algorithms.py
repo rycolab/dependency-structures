@@ -1,28 +1,31 @@
 from terms import Term
 from termdep import Tree
 
-def is_projective_naive(tree):
-    """
-    The following algorithm tests whether the input tree is
-    projective in a naive way, i.e., it runs in quadratic time
-    rather than linear.
-
-    The naive algorithm works as follows.
-    For every head--dependency pair (h1, d1),
-    we check whether there exists another head--dependency
-    pair (h2, d2) that could interleave in a non-projective way.
-    Since we conider all pairs, we only need to consider four cases:
-    i)   h1, h2, d1, d2
-    ii)  h1, d2, d1, h2
-    iii) d2, h1, h2, d1
-    iv)  h2, h1, d2, d1
-    """
-    for h1, d1 in tree:
-        for h2, d2 in tree:
+def is_projective_naive(tree, debug=False):
+	"""
+	The following algorithm tests whether the input tree is
+	projective in a naive way, i.e., it runs in quadratic time
+	rather than linear.
+	
+	The naive algorithm works as follows.
+	For every head--dependency pair (h1, d1),
+ 	we check whether there exists another head--dependency
+	pair (h2, d2) that could interleave in a non-projective way.
+	Since we conider all pairs, we only need to consider four cases:
+	i)   h1, h2, d1, d2
+	ii)  h1, d2, d1, h2
+	iii) d1, h2, h1, d2
+	iv)  d1, d2, h1, h2
+	"""
+	for h1, d1 in tree:
+		for h2, d2 in tree:
+			if debug:
+				print(h1, d1, h2, d2)
             # cases i), ii), iii), iv)
-            if h1 < h2 < d1 < d2 or h1 < d2 < d1 < h2 or d2 < h1 < h2 < d1 or h2 < h1 < d2 < d1:
-                return False
-    return True
+			if (h1 < h2 < d1 < d2) or (h1 < d2 < d1 < h2) or (d1 < h2 < h1 < d2) or (d1 < d2 < h1 < h2):
+				return False
+
+	return True
 
 
 # tests if a tree is well formed
@@ -96,8 +99,7 @@ def is_projective(tree):
 
     # we test the equality/isomorphism of tree and dep by checking whether for all nodes in
     # tree and dep, their parents match
-    dict1 = {}
-    dict2 = {}
+    dict1, dict2 = {}, {}
 
     # dict1 contains for every node d1 from tree its parent h1
     for (h1, d1) in tree:  # O(n)

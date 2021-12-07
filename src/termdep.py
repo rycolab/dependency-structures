@@ -25,7 +25,6 @@ class Tree(object):
 
     def __init__(self, tree, root=-1, text=None):
         """ `text` is used for pretty printing only. """
-        # sort the tree
         tree = list(tree)
         tree.sort(key=(lambda x: x[1]))
         self.tree = tuple(tree)
@@ -261,6 +260,9 @@ class Tree(object):
     def __getitem__(self, i):
         return self.tree[i]
 
+    def __iter__(self):
+        return iter(self.tree)
+
 
 class TreeBank(object):
 
@@ -292,7 +294,10 @@ class TreeBank(object):
                 if head == -1:
                     root = dep
 
-            dep = Tree(tuple(dep), root)
+            try:
+                dep = Tree(tuple(dep), root)
+            except ValueError:
+                continue
 
             if broken or root is None:
                 continue
