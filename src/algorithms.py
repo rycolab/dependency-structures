@@ -84,8 +84,6 @@ def is_well_formed(tree):
     return True
 
 # projectivity test (linear algorithm)
-
-
 def is_projective(tree):
 
     # according to chapter 3.3.2, we can test whether a dependency structure D is projective
@@ -116,8 +114,6 @@ def is_projective(tree):
     return True
 
 # pre-order collect (page 32)
-
-
 def pre_order_collect(tree):
     # algorithm according to book
     children = {}
@@ -140,8 +136,6 @@ def pre_order_collect(tree):
 
 
 # post-order collect (page 32)
-
-
 def post_order_collect(tree):
     # algorithm according to book
     children = {}
@@ -186,9 +180,8 @@ def treelet_ordered_tree(tree):
 
     return t
 
+
 # treelet-order collect (page 34)
-
-
 def treelet_order_collect(tree):
     # algorithm from book
     order = treelet_ordered_tree(tree)
@@ -218,17 +211,19 @@ def extract_order_annotations(tree):
 	prec = [None] * len(tree) 
 	order = [None] * len(tree)
 
-	#Fill out precedence array
+	# fill out precedence array
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
 		order[u] = []
-	#Calculate the order
+
+	# calculate the order
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
 			order[h].append(d)  
 		order[x].append(d)
+
 	return order
 
 # tree to term (Chapter 3)
@@ -244,13 +239,13 @@ def encode_proj_old(tree):
 	prec = [None] * len(tree) 
 	order = [None] * len(tree)
 
-	#Fill out precedence array
+	# fill out precedence array
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		prec[d] = u
 		order[u] = []
 
-	#Calculate the order
+	# calculate the order
 	for x in range(len(prec)):
 		(h, d) = tree[prec[x]]
 		if h != -1 :
@@ -262,31 +257,92 @@ def encode_proj_old(tree):
 # tree to term (Chapter 3)
 def encode_proj(tree):
 
+	# extract the order annotations
 	rootnode = -1
 	order_annotations = extract_order_annotations(tree)
 
+	# find the root
 	for u in range(len(tree)):
 		(h, d) = tree[u]
 		if h == -1 :
-			rootnode = u
+			rootnode = d
 
 	def term(root): 
-		oa = [j+1 for j in range(len(order_annotations[root])-1)]
-		lst = [None]
 
+		oa = [j+1 for j in range(len(order_annotations[root])-1)]
+		lst = []
 		for i, node in enumerate(order_annotations[root]):
 			if node == root:
-				oa.insert(i,0)
+				oa.insert(i, 0)
+				lst.insert(i, None)
 			else:
 				lst.append(term(node))
-		
+
+		# sanity check
+		assert len(oa) == len(lst)
+
 		return Term(tuple(oa), tuple(lst))
 
 	return term(rootnode)
 
+
 # term to tree (Chapter 3)
-
-
 def decode_proj(term):
+
+	counter, level = -1, 0
+
+	def descend(term, counter, level, deps):
+
+		parent, children = None, []
+		for a, t in zip(term.oa, term.lst):
+			if a == 0:
+				counter += 1
+				parent = counter
+				if level == 0:
+					deps.append((-1, parent))
+			else:
+				child, counter = descend(t, counter, level+1, deps)
+				children.append(child)
+
+		for child in children:
+			deps.append((parent, child))
+
+		return parent, counter	
+
+	deps = []
+	descend(term, counter, level, deps)
+	return tuple(deps)
+
+
+# TODO: Kuhlmann and Satta (2009)
+def annotate_l(tree):
 	pass
 
+# analogus to the above, should be combined into one method
+def annotator_r(tree):
+	pass
+
+def lcas(tree):
+	""" 
+	Least common ancestor. Can be done in O(|pi|) time.
+	See Kuhlmann and Satta (2009)
+	"""
+	pass
+
+# TODO: Page 38
+def block_order_collect(order):
+	pass
+
+def encode_block(tree):
+	pass
+
+def decode_block(tree):
+	pass
+
+# Chapter 5
+def is_weakly_nonprojective(tree):
+	pass
+
+# Chapter 5
+def is_wellnested(tree):
+	pass

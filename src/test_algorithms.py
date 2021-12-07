@@ -37,6 +37,20 @@ missingdependency1 = ((2, 1), (3, 2), (-1, 3), (3, 9),
                       (3, 5), (5, 4), (5, 6), (6, 8), (8, 7))
 missingdependency2 = ((1, 0), (-1, 1), (1, 3), (3, 2), (1, 4), (4, 7), (7, 5))
 
+# order annotations
+ord1 = [[0, 4], [1, 3], [2], [2, 3], [1, 4]]
+ord2 = [[0,1], [1, 2], [2]]
+ord3 = [[0, 1], [1,2], [2], [0, 3]]
+ord4 = [[0,1], [1,5], [2,3], [3], [2,4], [4,5]]
+ord5 = [[0], [0,1], [1,2], [2,3,5,9], [4], [4,5,6], [6,8], [7], [7,8], [9]]
+ord6 = [[0], [0,1,2], [2,3], [3], [1,4], [4,5,7], [6], [6,7],
+         [5,8,13], [9], [10, 11], [11], [12], [9,10,12,13]]
+ord7 = [[0], [0, 1], [1,2,3,5], [3], [4], [4, 5]]
+ord8 = [[0], [0,1,3,4], [2], [2,3], [4, 6], [5], [5, 6]]
+
+term1 = Term((0, 1), Term((1, 0), Term((0, 1), Term((1,0), Term((0), ())))))
+
+
 
 class TestProjectivity(unittest.TestCase):
 
@@ -58,19 +72,19 @@ class TestProjectivity(unittest.TestCase):
         self.assertEqual(is_projective_naive(nonproj5), False)
         self.assertEqual(is_projective_naive(nonproj6), False)
 
-    # def test_projective_linear(self):
-    #     self.assertEqual(is_projective(proj1), True)
-    #     self.assertEqual(is_projective(proj2), True)
-    #     self.assertEqual(is_projective(proj3), True)
-    #     self.assertEqual(is_projective(proj4), True)
+    def test_projective_linear(self):
+        self.assertEqual(is_projective(proj1), True)
+        self.assertEqual(is_projective(proj2), True)
+        self.assertEqual(is_projective(proj3), True)
+        self.assertEqual(is_projective(proj4), True)
 
-    # def test_non_projective_linear(self):
-    #     self.assertEqual(is_projective(nonproj1), False)
-    #     self.assertEqual(is_projective(nonproj2), False)
-    #     self.assertEqual(is_projective(nonproj3), False)
-    #     self.assertEqual(is_projective(nonproj4), False)
-    #     self.assertEqual(is_projective(nonproj5), False)
-    #     self.assertEqual(is_projective(nonproj6), False)
+    def test_non_projective_linear(self):
+        self.assertEqual(is_projective(nonproj1), False)
+        self.assertEqual(is_projective(nonproj2), False)
+        self.assertEqual(is_projective(nonproj3), False)
+        self.assertEqual(is_projective(nonproj4), False)
+        self.assertEqual(is_projective(nonproj5), False)
+        self.assertEqual(is_projective(nonproj6), False)
 
     def test_pre_order_collect(self):
         self.assertEqual(pre_order_collect(poc1), [0, 1, 2, 3, 4])
@@ -104,20 +118,6 @@ class TestProjectivity(unittest.TestCase):
         self.assertEqual(is_well_formed(missingdependency2), False)
 
 
-if __name__ == '__main__':
-    unittest.main()
-=======
-ord1 = [[0, 4], [1, 3], [2], [2, 3], [1, 4]]
-ord2 = [[0,1], [1, 2], [2]]
-ord3 = [[0, 1], [1,2], [2], [0, 3]]
-ord4 = [[0,1], [1,5], [2,3], [3], [2,4], [4,5]]
-ord5 = [[0], [0,1], [1,2], [2,3,5,9], [4], [4,5,6], [6,8], [7], [7,8], [9]]
-ord6 = [[0], [0,1,2], [2,3], [3], [1,4], [4,5,7], [6], [6,7],
-         [5,8,13], [9], [10, 11], [11], [12], [9,10,12,13]]
-ord7 = [[0], [0, 1], [1,2,3,5], [3], [4], [4, 5]]
-ord8 = [[0], [0,1,3,4], [2], [2,3], [4, 6], [5], [5, 6]]
-
-term1 = Term((0, 1), Term((1, 0), Term((0, 1), Term((1,0), Term((0), ())))))
 
 class TestAlgorithms(unittest.TestCase):
 

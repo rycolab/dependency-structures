@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 # from _typeshed import Self
 # from numpy.char import array
 from numpy.lib.function_base import append
@@ -22,6 +25,7 @@ class Tree(object):
 
     def __init__(self, tree, root=-1, text=None):
         """ `text` is used for pretty printing only. """
+        # sort the tree
         tree = list(tree)
         tree.sort(key=(lambda x: x[1]))
         self.tree = tuple(tree)
