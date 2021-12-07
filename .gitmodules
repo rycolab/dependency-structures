@@ -1,0 +1,6 @@
+[submodule "data/UD_English-ParTUT"]
+	path = data/UD_English-ParTUT
+	url = git@github.com:UniversalDependencies/UD_English-ParTUT.git
+[submodule "data/UD_German-GSD"]
+	path = data/UD_German-GSD
+	url = git@github.com:UniversalDependencies/UD_German-GSD.git
