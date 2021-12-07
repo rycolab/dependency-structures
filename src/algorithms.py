@@ -32,7 +32,7 @@ def is_projective_naive(tree, debug=False):
 def is_well_formed(tree):
     # find the root and create adjacency list
     root = -1
-    children = {}
+    children = {} 
     vertices = []
     for parent, child in tree:
         vertices.append(child)
