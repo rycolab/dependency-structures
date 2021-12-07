@@ -45,11 +45,7 @@ gen = tb.generator()
 for count, tree1 in enumerate(gen):
 	term = encode_proj(tree1)
 	tree2 = decode_proj(term)
-	try:
-		print(tree1)
-	except StopIteration:
-		print(tree1.tree)
-		break
+	print(tree1)
 	if is_projective_naive(tree1):
 		same(tree1, tree2)
 		proj += 1
