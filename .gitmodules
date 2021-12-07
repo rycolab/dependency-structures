@@ -4,3 +4,6 @@
 [submodule "data/UD_German-GSD"]
 	path = data/UD_German-GSD
 	url = git@github.com:UniversalDependencies/UD_German-GSD.git
+[submodule "data/UD_Swiss_German-UZH"]
+	path = data/UD_Swiss_German-UZH
+	url = git@github.com:UniversalDependencies/UD_Swiss_German-UZH.git
