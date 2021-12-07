@@ -72,19 +72,19 @@ class TestProjectivity(unittest.TestCase):
         self.assertEqual(is_projective_naive(nonproj5), False)
         self.assertEqual(is_projective_naive(nonproj6), False)
 
-    # def test_projective_linear(self):
-    #     self.assertEqual(is_projective(proj1), True)
-    #     self.assertEqual(is_projective(proj2), True)
-    #     self.assertEqual(is_projective(proj3), True)
-    #     self.assertEqual(is_projective(proj4), True)
+    def test_projective_linear(self):
+        self.assertEqual(is_projective(proj1), True)
+        self.assertEqual(is_projective(proj2), True)
+        self.assertEqual(is_projective(proj3), True)
+        self.assertEqual(is_projective(proj4), True)
 
-    # def test_non_projective_linear(self):
-    #     self.assertEqual(is_projective(nonproj1), False)
-    #     self.assertEqual(is_projective(nonproj2), False)
-    #     self.assertEqual(is_projective(nonproj3), False)
-    #     self.assertEqual(is_projective(nonproj4), False)
-    #     self.assertEqual(is_projective(nonproj5), False)
-    #     self.assertEqual(is_projective(nonproj6), False)
+    def test_non_projective_linear(self):
+        self.assertEqual(is_projective(nonproj1), False)
+        self.assertEqual(is_projective(nonproj2), False)
+        self.assertEqual(is_projective(nonproj3), False)
+        self.assertEqual(is_projective(nonproj4), False)
+        self.assertEqual(is_projective(nonproj5), False)
+        self.assertEqual(is_projective(nonproj6), False)
 
     def test_pre_order_collect(self):
         self.assertEqual(pre_order_collect(poc1), [0, 1, 2, 3, 4])
