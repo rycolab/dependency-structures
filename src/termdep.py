@@ -86,17 +86,18 @@ class Tree(object):
         Return the depth of the tree (excluding artificial root node).
         Warning: Due to list representation of edges, this is slow.
         """
-        res = self.__dfs(self.root)
+        res = self._dfs(self.root)
         return res - 1
 
-    def __dfs(self, root) -> int:
+    def _dfs(self, root) -> int:
         """
         Internal method that gives depth starting from root node.
-        Warning: Due to list representation of edges, this is slow. """
+        Warning: Due to list representation of edges, this is slow.
+        """
         max_depth = 0
         for parent, node in self.tree:
             if parent == root:
-                partial_depth = self.__dfs(node)
+                partial_depth = self._dfs(node)
                 max_depth = max(max_depth, partial_depth)
         return max_depth + 1
 
