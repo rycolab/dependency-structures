@@ -1,11 +1,11 @@
-from typing import Iterable, Union
-from typing_extensions import Self
+from __future__ import annotations
+from typing import List, Tuple
 
 
 class OrderAnnotation(object):
 
     @staticmethod
-    def leaf() -> Self:
+    def leaf():
         """Creates an order annotation with just the root in the order list
 
         Returns:
@@ -14,11 +14,8 @@ class OrderAnnotation(object):
         return OrderAnnotation([[0]])
 
     @staticmethod
-    def degree1(*order: Iterable[int]) -> Self:
-        """Creates an order annotation with block-degree 1 and given order
-
-        Args:
-            order (list): Single int-list representing this OA's order
+    def deg1(*order: int) -> OrderAnnotation:
+        """Create an order annotation of block-degree 1
 
         Returns:
             OrderAnnotation
@@ -26,31 +23,26 @@ class OrderAnnotation(object):
         return OrderAnnotation([[*order]])
 
     @staticmethod
-    def degreeK(*orders: Iterable[Iterable[int]]) -> Self:
+    def degK(*orders: List[int]) -> OrderAnnotation:
+        """Create an order annotation of arbitrary block-degree. Orders are passed as lists of 
+        orders for each block.
+
+        Returns:
+            OrderAnnotation
+        """
         return OrderAnnotation([*orders])
 
-    def __init__(self, orders: Union[Iterable[Iterable[int]], Iterable[int]]):
-        """Creates a new order annotation instance with given order annotations
+    def __init__(self, orders: List[List[int]]):
+        """Creates a new instance of an order annotation with given orders.
+        Order annotations are represented as a list of lists, where each list contains the order
+        for the given block.
+
+        You can use the factory methods `leaf`, `deg1` and `degK` to improve legibility.
 
         Args:
-            orders (list): Single order (for block-degree 1) or list of orders (for block-degree k > 1)
+            orders (List[List[int]]): List of orders for each block
         """
-        # INVARIANT: self.orders is always a list of lists
-        if len(orders) == 0:
-            # Empty order annotation
-            self.degree = 0
-            self.orders = []
-        elif all([isinstance(x, int) for x in orders]):
-            # Block-degree 1 order annotation, implicitly treat orders as first block
-            self.degree = 1
-            self.orders = [orders]
-        elif all([isinstance(x, list) for x in orders]):
-            # Block-degree > 1, every sublist is an order annotation for a block
-            self.degree = len(orders)
-            self.orders = orders
-        else:
-            raise TypeError("Cannot interpret argument as order annotation: " +
-                            str(orders))
+        self.orders = orders
 
     def __str__(self):
         return '⟨' + ','.join([''.join([str(x) for x in order]) for order in self.orders]) + '⟩'
@@ -64,15 +56,33 @@ class OrderAnnotation(object):
 
 class Term(object):
 
-    def __init__(self, oa, lst):
+    @staticmethod
+    def inner(oa: OrderAnnotation, lst: List[Term]):
+        return Term(oa, lst)
+
+    @staticmethod
+    def leaf(oa: OrderAnnotation):
+        return Term(oa, [])
+
+    @staticmethod
+    def fromTuples(tup: Tuple[OrderAnnotation, list]):
+        node = tup[0]
+        children = map(Term.fromTuples, tup[1])
+        return Term(node, list(children))
+
+    def __init__(self, oa: OrderAnnotation, lst: List[Term]):
         # an order annotation serves as the functor of the term
         self.oa = oa
         # list of the children
         self.lst = lst
 
     def __str__(self):
-        # TODO: visualization of the terms
-        return str(self.oa)
+        def aux(term: Term, level: int):
+            return '│ ' * (level - 1) + \
+                ('├─' if level > 0 else '') + str(term.oa) + \
+                '\n'.join([''] + [aux(x, level + 1) for x in term.lst])
+
+        return aux(self, 0)
 
     def __len__(self):
         return len(self.lst)
