@@ -105,7 +105,7 @@ class Term(object):
             @staticmethod
             def leaf(label: str, depth=0) -> Node:
                 n = len(label)
-                return Node(label, n // 2, 0, n, depth)
+                return Node(label, (n - 1) // 2, 0, n, depth)
 
             @property
             def lblIndent(self):
@@ -179,7 +179,7 @@ class Term(object):
                 r = child.shiftRight(r + spacing * (i > 0))
             # Update parent midpoint
             m1 = (children[0].m + children[-1].m) // 2
-            m2 = len(lbl) // 2
+            m2 = (len(lbl) - 1) // 2
             m = max(m1, m2)
             # Shift children if necessary (if children width < parent width)
             shamt = max(0, m2 - m1)
@@ -191,8 +191,8 @@ class Term(object):
 
         def displayTreeToString(root: Node, depth: int) -> str:
             blank = ' '
-            sym = {'blank': blank, 'h': '─', 'v': '│', 'tl': '┘', 'tr': '└', 'bl': '┐',
-                   'br': '┌', 'vl': '┤', 'vr': '├', 'th': '┴', 'bh': '┬', 'vh': '┼'}
+            sym = {'h': '─', 'v': '│', 'bl': '┐',
+                   'br': '┌', 'th': '┴', 'bh': '┬', 'vh': '┼'}
 
             class Brace:
                 def __init__(self, d, top: int, bots: list[int]) -> None:
@@ -221,8 +221,8 @@ class Term(object):
             while queue:
                 node = queue.pop(0)
                 n = len(node.lbl)
-                lblleft = node.m - n // 2
-                lblright = node.m + n - (n // 2)
+                lblleft = node.m - (n - 1) // 2
+                lblright = node.m + n - ((n - 1) // 2)
                 # Draw node label
                 canvas[node.d * 2][lblleft:lblright] = list(node.lbl)
                 # Draw brace

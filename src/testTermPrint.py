@@ -44,6 +44,8 @@ def main():
 
     term7 = Term.inner([0, 1], [])
     term8 = Term.inner([0, 1, 0], [])
+    term9 = Term.leaf()
+    term10 = Term.inner([0, 1, 2, 3], [])
 
     print(term1, '\n')
     print(term2, '\n')
@@ -53,6 +55,8 @@ def main():
     print(term6, '\n')
     print(term7, '\n')
     print(term8, '\n')
+    print(term9, '\n')
+    print(term10, '\n')
 
 
 if __name__ == '__main__':
