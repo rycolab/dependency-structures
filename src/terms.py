@@ -1,7 +1,5 @@
 from __future__ import annotations
-from os import chdir
-from typing import Iterable, List, Optional, Union
-from functools import reduce
+from typing import List
 
 
 class OrderAnnotation(object):
@@ -85,7 +83,7 @@ class Term(object):
     def isLeaf(self):
         return len(self.lst) == 0
 
-    def toString1(self):
+    def toHorizontalTreeString(self) -> str:
         """Converts the term to a string representing a tree similar to bash's `tree` command
         """
         def aux(term: Term, level: int, lastSibling: bool):
@@ -100,51 +98,7 @@ class Term(object):
             return nodeStr + childrenStr
         return aux(self, 0, True)
 
-    def toString2(self):
-        """Converts the term to a string representing a tree similar to Kuhlmann's representation in
-        his book
-        """
-        def maxLineWidth(s: str):
-            return max(map(len, s.splitlines()))
-
-        def concatLines(s1: str, s2: str, pad=0):
-            lines1 = s1.splitlines()
-            lines2 = s2.splitlines()
-            lwidth = max(map(len, lines1)) if len(lines1) > 0 else 0
-            res = []
-            for i in range(max(len(lines1), len(lines2))):
-                line1 = lines1[i] if i < len(lines1) else ''
-                line2 = lines2[i] if i < len(lines2) else ''
-                res.append(line1.ljust(lwidth + pad, ' ') + line2)
-            return '\n'.join(res)
-
-        def concatLinesMany(strings: Iterable[str], pad=0):
-            start = True
-
-            def f(l, r):
-                nonlocal start
-                res = concatLines(l, r, 0 if start else pad)
-                start = False
-                return res
-
-            return reduce(f, strings, '')
-
-        def aux(term: Term):
-            node = str(term.oa)
-            if term.isLeaf():
-                # Leaf node
-                return node
-            # Inner node
-            pad = 2
-            children = map(aux, term.lst)
-            cstr = concatLinesMany(children, pad)
-            maxchildwidth = maxLineWidth(cstr)
-            lpad = (maxLineWidth(cstr) - len(node)) // 2
-            print(f'{term.oa}: maxchildwidth: {maxchildwidth}')
-            return (' ' * lpad) + node + '\n\n' + cstr
-        return aux(self)
-
-    def toString3(self):
+    def toVerticalTreeString(self) -> str:
         class Node:
             blank = ' '
 
@@ -172,6 +126,8 @@ class Term(object):
                     return max([x.getDepth() for x in self.children])
 
             def shiftRight(self, amt: int):
+                if amt <= 0:
+                    return self.r
                 self.l += amt
                 self.m += amt
                 self.r += amt
@@ -211,20 +167,26 @@ class Term(object):
 
         def buildDisplayTree(term: Term, depth=0) -> Node:
             lbl = str(term.oa)
+            # Leaf node
             if term.isLeaf():
-                # Leaf node
                 return Node.leaf(lbl, depth)
             # Inner node
-            # Put children side by side
-            children = list(
-                map(lambda x: buildDisplayTree(x, depth + 1), term.lst))
+            children = [buildDisplayTree(x, depth + 1) for x in term.lst]
+            # Put children next to eachother
+            spacing = 3
             r = 0
-            spacing = 2
+            for i, child in enumerate(children):
+                r = child.shiftRight(r + spacing * (i > 0))
+            # Update parent midpoint
+            m1 = (children[0].m + children[-1].m) // 2
+            m2 = len(lbl) // 2
+            m = max(m1, m2)
+            # Shift children if necessary (if children width < parent width)
+            shamt = max(0, m2 - m1)
             for child in children:
-                r = child.shiftRight(r) + spacing
-            # Adjust r in case the label is wider than the children
-            r = max(r, len(lbl))
-            m = r // 2
+                child.shiftRight(shamt)
+            # Get correct r-value
+            r = max(len(lbl), r)
             return Node(lbl, m, 0, r, depth, children)
 
         def displayTreeToString(root: Node, depth: int) -> str:
@@ -242,15 +204,19 @@ class Term(object):
                     row = canvas[self.d * 2 + 1]
                     imin = min([self.top, *self.bots])
                     imax = max([self.top, *self.bots])
-                    fill = sym['br'] + sym['h'] * (imax - imin - 1) + sym['bl']
+                    fill = sym['br'] + sym['h'] * \
+                        (imax - imin - 1) + \
+                        sym['bl'] if imin < imax else sym['v']
                     row[imin:imax+1] = fill
-                    row[self.top] = sym['th']
                     for i in self.bots[1:-1]:
                         row[i] = sym['bh']
+                    botSameAsTop = any([x == self.top for x in self.bots])
+                    top = sym['v'] if imin == imax else sym['vh'] if botSameAsTop else sym['th']
+                    row[self.top] = top
 
             queue: list[Node] = [root]
             canvas: list[list[str]] = []
-            for _ in range((depth + 1) * 2):
+            for _ in range((depth + 1) * 2 - 1):
                 canvas.append([blank] * root.r)
             while queue:
                 node = queue.pop(0)
@@ -267,27 +233,12 @@ class Term(object):
             return '\n'.join([''.join(row) for row in canvas])
 
         displayTree = buildDisplayTree(self)
-        # displayTree = Node('⟨01212,12⟩', 4, 0, 10, 0)
-        # n0 = Node('⟨012⟩', 2, 0, 5, 0)
-        # n1 = Node('⟨0⟩', 1, 0, 3, 0)
-        # n2 = Node('⟨01212,12⟩', 5, 0, 10, 0)
-        # n2.shiftRight(3 + 2)
-        # n1.d = n2.d = 1
-        # n0.children = [n1, n2]
-        # n0.r = n2.r
-        # n0.m = n2.r // 2
-        # r = n0.shiftRight(4)
-        # displayTree = n0
-        # displayTree = Node('⟨12345678⟩', 5, 0, 10, 0)
         depth = displayTree.getDepth()
-        print(displayTree)
-        print('Depth: ', depth)
-        print('-----------------')
 
         return displayTreeToString(displayTree, depth)
 
     def __str__(self):
-        return self.toString3()
+        return self.toVerticalTreeString()
 
     def __repr__(self) -> str:
         return '\n' + str(self) + '\n'
