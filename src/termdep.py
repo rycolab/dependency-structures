@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+
 # from _typeshed import Self
 # from numpy.char import array
 from numpy.lib.function_base import append
@@ -83,17 +86,18 @@ class Tree(object):
         Return the depth of the tree (excluding artificial root node).
         Warning: Due to list representation of edges, this is slow.
         """
-        res = self.__dfs(self.root)
+        res = self._dfs(self.root)
         return res - 1
 
-    def __dfs(self, root) -> int:
+    def _dfs(self, root) -> int:
         """
         Internal method that gives depth starting from root node.
-        Warning: Due to list representation of edges, this is slow. """
+        Warning: Due to list representation of edges, this is slow.
+        """
         max_depth = 0
         for parent, node in self.tree:
             if parent == root:
-                partial_depth = self.__dfs(node)
+                partial_depth = self._dfs(node)
                 max_depth = max(max_depth, partial_depth)
         return max_depth + 1
 
@@ -257,6 +261,9 @@ class Tree(object):
     def __getitem__(self, i):
         return self.tree[i]
 
+    def __iter__(self):
+        return iter(self.tree)
+
 
 class TreeBank(object):
 
@@ -270,7 +277,7 @@ class TreeBank(object):
         The ordering of the pairs does not matter.
         -1 is a distinguished integer for the root
         """
-        for n, sentence in enumerate(self.trees):
+        for sentence in self.trees:
 
             root = None
             broken = False
@@ -288,7 +295,10 @@ class TreeBank(object):
                 if head == -1:
                     root = dep
 
-            dep = Tree(tuple(dep), root)
+            try:
+                dep = Tree(tuple(dep), root)
+            except ValueError:
+                continue
 
             if broken or root is None:
                 continue
