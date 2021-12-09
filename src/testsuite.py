@@ -4,6 +4,7 @@ import unittest
 from testPrettyPrint import TestPrettyPrint
 from testAlgorithm import TestProjectivity, TestAlgorithms
 from testRoundtrip import TestRoundTrip
+from testTermPrint import TestTermPrint
 
 if __name__ == '__main__':
     unittest.main()
