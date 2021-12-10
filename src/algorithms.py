@@ -342,6 +342,7 @@ def annotate_l(tree):
 # analogus to the above, should be combined into one method
 def annotate_r(tree):
 
+    # FIXME: this doesn't seem to produce the correct right endpoints currently
     tree_dict = {}
     number_of_nodes = len(tree)
     root_node = None
@@ -390,8 +391,15 @@ def get_lca(tree_dict, node_pred, node_succ):
     return lca
 
 # TODO: Page 38
-def block_order_collect(order):
-	pass
+def block_order_collect(order, calls, u):
+    L = []
+    calls[u] += 1
+    
+    for v in order[u][calls[u]]:
+        if v == u: L.append(u)
+        else: L.append(block_order_collect(order,calls,v))
+
+    return L    
 
 def encode_block(tree):
 	pass
