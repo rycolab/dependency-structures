@@ -375,8 +375,13 @@ def get_lca(tree_dict, a, b):
     checked = set([])
 
     while a not in checked and b not in checked:
+
         checked.add(a)
         checked.add(b)
+        if tree_dict[a] == -1:
+            return a
+        if tree_dict[b] == -1:
+            return b
         a = tree_dict[a]
         b = tree_dict[b]
     if a in checked: return a
