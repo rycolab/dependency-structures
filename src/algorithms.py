@@ -372,23 +372,38 @@ Least common ancestor. Can be done in O(|pi|) time.
 See Kuhlmann and Satta (2009)
 """
 def get_lca(tree_dict, node_pred, node_succ):
-    lca = -1
-    parent_pred = node_pred
-    parent_succ = node_succ    
+    checked = set([])
+    a = node_pred
+    b = node_succ
 
-    while parent_pred != parent_succ:
-        if tree_dict[parent_pred] == parent_succ: 
-            lca = parent_succ
-            break
-        elif tree_dict[parent_succ] == parent_pred: 
-            lca = parent_pred
-            break
-        else: 
-            parent_pred = tree_dict[parent_pred]
-            parent_succ = tree_dict[parent_succ]
-            lca = parent_succ
+    while a not in checked and b not in checked:
+        checked.add(a)
+        checked.add(b)
+        a = tree_dict[a]
+        b = tree_dict[b]
+    if a in checked: return a
+    else: return b
 
-    return lca
+    # lca = -1
+    # parent_pred = node_pred
+    # parent_succ = node_succ    
+
+    # while parent_pred != parent_succ:
+    #     if tree_dict[parent_pred] == parent_succ: 
+    #         lca = parent_succ
+    #         break
+    #     elif tree_dict[parent_succ] == parent_pred: 
+    #         lca = parent_pred
+    #         break
+    #     else: 
+    #         parent_pred = tree_dict[parent_pred]
+    #         parent_succ = tree_dict[parent_succ]
+    #         lca = parent_succ
+    #         print("pp =" + str(parent_pred))
+    #         print("ps =" + str(parent_succ))
+        
+
+    # return lca
 
 # TODO: Page 38
 def block_order_collect(order, calls, u):
