@@ -371,10 +371,8 @@ def annotate(tree):
 Least common ancestor. Can be done in O(|pi|) time.
 See Kuhlmann and Satta (2009)
 """
-def get_lca(tree_dict, node_pred, node_succ):
+def get_lca(tree_dict, a, b):
     checked = set([])
-    a = node_pred
-    b = node_succ
 
     while a not in checked and b not in checked:
         checked.add(a)
