@@ -318,22 +318,88 @@ def decode_proj(term):
 
 # TODO: Kuhlmann and Satta (2009)
 def annotate_l(tree):
-	pass
+	
+    tree_dict = {}
+    number_of_nodes = len(tree)
+    root_node = None
+    left_endpoints = []
+    for (h1, d1) in tree: 
+        if h1 == -1: root_node = d1
+        tree_dict[d1] = h1
+
+    for x in range(number_of_nodes):
+        b = -1
+        if x == 0: b = root_node
+        else: b = get_lca(tree_dict, x-1, x)
+
+        curr_node = x
+        while curr_node != b:
+            left_endpoints[curr_node] = x
+
+    return left_endpoints        
+
 
 # analogus to the above, should be combined into one method
-def annotator_r(tree):
-	pass
+def annotate_r(tree):
 
-def lcas(tree):
-	""" 
-	Least common ancestor. Can be done in O(|pi|) time.
-	See Kuhlmann and Satta (2009)
-	"""
-	pass
+    # FIXME: this doesn't seem to produce the correct right endpoints currently
+    tree_dict = {}
+    number_of_nodes = len(tree)
+    root_node = None
+    right_endpoints = []
+    for (h1, d1) in tree: 
+        if h1 == -1: root_node = d1
+        tree_dict[d1] = h1
+
+    for x in reversed(range(number_of_nodes)):
+        b = -1
+        if x == (number_of_nodes-1): b = root_node
+        else: b = get_lca(tree_dict, x+1, x)
+
+        curr_node = x
+        while curr_node != b:
+            right_endpoints[curr_node] = x
+
+    return right_endpoints
+
+def annotate(tree):
+    left_endpoints = annotate_l(tree)
+    right_endpoints = annotate_r(tree)
+    return list(zip(left_endpoints,right_endpoints))                   
+
+""" 
+Least common ancestor. Can be done in O(|pi|) time.
+See Kuhlmann and Satta (2009)
+"""
+def get_lca(tree_dict, node_pred, node_succ):
+    lca = -1
+    parent_pred = node_pred
+    parent_succ = node_succ    
+
+    while parent_pred != parent_succ:
+        if tree_dict[parent_pred] == parent_succ: 
+            lca = parent_succ
+            break
+        elif tree_dict[parent_succ] == parent_pred: 
+            lca = parent_pred
+            break
+        else: 
+            parent_pred = tree_dict[parent_pred]
+            parent_succ = tree_dict[parent_succ]
+            lca = parent_succ
+
+    return lca
 
 # TODO: Page 38
-def block_order_collect(order):
-	pass
+def block_order_collect(order, calls, u):
+    L = []
+    calls[u] += 1
+    
+    for v in order[u][calls[u]]:
+        if v == u: L.append(u)
+        else: L.append(block_order_collect(order,calls,v))
+
+    return L    
 
 def encode_block(tree):
 	pass
