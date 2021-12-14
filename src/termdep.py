@@ -245,9 +245,12 @@ class Tree(object):
 
         return matrix
 
-    def is_projective(self):
-        matrix = self._generate_matrix()
-        return not self.sym_tbl['projection_intersection'] in matrix and not self.sym_tbl['cross_intersection'] in matrix
+    def is_projective(self) -> bool:
+        """
+        TODO: Remove this, the serious function is in algorithms.py.
+        """
+        string = self.__str__()
+        return not (self.sym_tbl['projection_intersection'] in string or self.sym_tbl['cross_intersection'] in string)
 
     def __str__(self):
         """
