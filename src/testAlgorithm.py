@@ -50,6 +50,11 @@ ord8 = [[0], [0,1,3,4], [2], [2,3], [4, 6], [5], [5, 6]]
 
 term1 = Term((0, 1), Term((1, 0), Term((0, 1), Term((1,0), Term((0), ())))))
 
+def tree_dict(tree):
+    td = {}
+    for (parent, child) in tree:
+        td[child] = parent
+    return td
 
 
 class TestProjectivity(unittest.TestCase):
@@ -139,7 +144,11 @@ class TestAlgorithms(unittest.TestCase):
                 compare_terms(term0.lst[i], term1.lst[i])
 
         compare_terms(encode_proj(proj1), term1)
-        
+    def test_get_lca(self):
+        self.assertEqual(get_lca(tree_dict(proj1), 4, 3), 4)   
+        self.assertEqual(get_lca(tree_dict(proj1), 4, 0), 0) 
+        self.assertEqual(get_lca(tree_dict(proj1), 2, 4), 4) 
+        self.assertEqual(get_lca(tree_dict(proj1), 3, 2), 3) 
 
 if __name__ == '__main__':
     unittest.main()
