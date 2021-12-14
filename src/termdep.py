@@ -33,11 +33,10 @@ class Tree(object):
         # text preprocessesing and checks
         # If no text is given, set "A B C ... a b c ... 0 1 2 ...", one word per node.
         if text is None:
-            words = [chr(i) for i in range(65, 91)]
-            words += [chr(i) for i in range(97, 123)]
-            words += [str(i) for i in range(0, self.size-2*26)]
+            words = [chr(i) for i in range(65, 91)]  # upper case letters
+            words += [chr(i) for i in range(97, 123)]  # lower case letters
+            words += [str(i) for i in range(0, self.size-2*26)]  # numbers
             text = " ".join(words[:self.size])
-            print(text)
         self.text = text.strip('. \t')
 
         # Make sure the text and node amount is equal
@@ -248,7 +247,7 @@ class Tree(object):
 
     def is_projective(self):
         matrix = self._generate_matrix()
-        return not '┿' in matrix and not '╋' in matrix
+        return not self.sym_tbl['projection_intersection'] in matrix and not self.sym_tbl['cross_intersection'] in matrix
 
     def __str__(self):
         """
