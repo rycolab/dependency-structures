@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 # from _typeshed import Self
 # from numpy.char import array
@@ -31,8 +31,13 @@ class Tree(object):
         self.root = root
 
         # text preprocessesing and checks
-        if text is None:  # If no text is given, set "A B C ...", one letter per node
-            text = " ".join([chr(i) for i in range(65, 65+self.size)])
+        # If no text is given, set "A B C ... a b c ... 0 1 2 ...", one word per node.
+        if text is None:
+            words = [chr(i) for i in range(65, 91)]
+            words += [chr(i) for i in range(97, 123)]
+            words += [str(i) for i in range(0, self.size-2*26)]
+            text = " ".join(words[:self.size])
+            print(text)
         self.text = text.strip('. \t')
 
         # Make sure the text and node amount is equal
@@ -154,7 +159,7 @@ class Tree(object):
         matrix = np.full((max_depth + 1, right_most -
                          left_most), self.sym_tbl["empty"])
 
-        # iterate of children to add sub-matrices to resulting matrix and 
+        # iterate of children to add sub-matrices to resulting matrix and
         # add children depth to new depth dictionary
         prev_right = 0
         prev_depth_floor = 1
@@ -169,7 +174,7 @@ class Tree(object):
         for (m, l, r, cd), col in zip(children_arr, children_columns):
             # if subtree overlaps with previous tree, draw it lower, else
             # draw on the same level
-            if l < prev_right:  
+            if l < prev_right:
                 rows_floor, rows_ceil = prev_depth_ceil, prev_depth_ceil + \
                     len(m)
 
@@ -187,7 +192,7 @@ class Tree(object):
             # add sub-matrices to resulting matrix
             matrix[rows_floor:rows_ceil, l - left_most:r - left_most] = m
 
-            #update prev_right
+            # update prev_right
             prev_right = r
 
             # add vertical edges
