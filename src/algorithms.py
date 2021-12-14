@@ -341,8 +341,29 @@ def decode_block(tree):
 
 # Chapter 5
 def is_weakly_nonprojective(tree):
-	pass
+    for i in range(len(tree)):
+        for j in range(i+1, len(tree)):
+            # case (a) from the book (pg. 52)
+            if min(tree[i]) < min(tree[j]) < max(tree[i]) < max(tree[j]):
+                return False
+            # case (b) from the book (pg. 52)
+            if min(tree[j]) < min(tree[i]) < max(tree[j]) < max(tree[i]):
+                return False
+    return True
 
 # Chapter 5
 def is_wellnested(tree):
-	pass
+    root_term = encode_block(tree)
+    
+    def check_forbidden_string(term):
+        # check for forbidden substring in term OA
+        for i in range(len(term.oa) - 3):
+            if term.oa[i] == term.oa[i+2] and term.oa[i+1] == term.oa[i+3]:
+                return True
+        # recursively check children for forbidden substring
+        for i in range(len(term.lst)):
+            if check_forbidden_string(term.lst[i]):
+                return True
+        return False
+    
+    return not check_forbidden_string(root_term)
