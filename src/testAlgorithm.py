@@ -144,11 +144,122 @@ class TestAlgorithms(unittest.TestCase):
                 compare_terms(term0.lst[i], term1.lst[i])
 
         compare_terms(encode_proj(proj1), term1)
+    
     def test_get_lca(self):
         self.assertEqual(get_lca(tree_dict(proj1), 4, 3), 4)   
         self.assertEqual(get_lca(tree_dict(proj1), 4, 0), 0) 
         self.assertEqual(get_lca(tree_dict(proj1), 2, 4), 4) 
-        self.assertEqual(get_lca(tree_dict(proj1), 3, 2), 3) 
+        self.assertEqual(get_lca(tree_dict(proj1), 3, 2), 3)
+
+        self.assertEqual(get_lca(tree_dict(proj2), -1, 2), -1)
+        self.assertEqual(get_lca(tree_dict(proj2), 0, -1), -1)
+        self.assertEqual(get_lca(tree_dict(proj2), 0, 2), 0)
+        self.assertEqual(get_lca(tree_dict(proj2), 2, 1), 1)
+        self.assertEqual(get_lca(tree_dict(proj2), 0, 0), 0)
+
+        self.assertEqual(get_lca(tree_dict(proj3), 3, 0), 3)
+        self.assertEqual(get_lca(tree_dict(proj3), 2, -1), -1)
+        self.assertEqual(get_lca(tree_dict(proj3), 0, 2), 0)
+        self.assertEqual(get_lca(tree_dict(proj3), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(proj3), 3, 2), 3)
+
+        self.assertEqual(get_lca(tree_dict(proj4), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(proj4), 5, 3), 5)
+        self.assertEqual(get_lca(tree_dict(proj4), 3, 4), 4)
+        self.assertEqual(get_lca(tree_dict(proj4), -1, 3), -1)
+        self.assertEqual(get_lca(tree_dict(proj4), 2, 0), 0)
+
+        self.assertEqual(get_lca(tree_dict(proj5), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(proj5), -1, 3), -1)
+        self.assertEqual(get_lca(tree_dict(proj5), 4, 7), 5)
+        self.assertEqual(get_lca(tree_dict(proj5), 7, 4), 5)
+        self.assertEqual(get_lca(tree_dict(proj5), 6, 4), 5)
+        self.assertEqual(get_lca(tree_dict(proj5), 9, 0), 3)
+        self.assertEqual(get_lca(tree_dict(proj5), 9, 5), 3)
+        self.assertEqual(get_lca(tree_dict(proj5), 0, 7), 3)
+        self.assertEqual(get_lca(tree_dict(proj5), 2, 5), 3)
+        self.assertEqual(get_lca(tree_dict(proj5), 3, 2), 3)
+
+        self.assertEqual(get_lca(tree_dict(proj6), -1, -1), -1)
+        self.assertEqual(get_lca(tree_dict(proj6), 0, 3), 1)
+        self.assertEqual(get_lca(tree_dict(proj6), 3, 6), 5)
+        self.assertEqual(get_lca(tree_dict(proj6), 1, 7), 5)
+        self.assertEqual(get_lca(tree_dict(proj6), 11, 9), 13)
+        self.assertEqual(get_lca(tree_dict(proj6), 12, 9), 13)
+        self.assertEqual(get_lca(tree_dict(proj6), 10, 12), 13)
+        self.assertEqual(get_lca(tree_dict(proj6), 12, 7), 8)
+        self.assertEqual(get_lca(tree_dict(proj6), 9, 4), 8)
+        self.assertEqual(get_lca(tree_dict(proj6), 0, 12), 8)
+        self.assertEqual(get_lca(tree_dict(proj6), 5, 3), 5)
+        self.assertEqual(get_lca(tree_dict(proj6), -1, 6), -1)
+        self.assertEqual(get_lca(tree_dict(proj6), 1, 3), 1)
+        self.assertEqual(get_lca(tree_dict(proj6), 9, 2), 8)
+
+        self.assertEqual(get_lca(tree_dict(proj7), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(proj7), 0, 4), 2)
+        self.assertEqual(get_lca(tree_dict(proj7), 5, 1), 2)
+        self.assertEqual(get_lca(tree_dict(proj7), 1, 3), 2)
+        self.assertEqual(get_lca(tree_dict(proj7), 4, 5), 5)
+        self.assertEqual(get_lca(tree_dict(proj7), 3, 1), 2)
+        self.assertEqual(get_lca(tree_dict(proj7), 0, 2), 2)
+        self.assertEqual(get_lca(tree_dict(proj7), 0, -1), -1)
+
+        self.assertEqual(get_lca(tree_dict(proj8), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(proj8), 0, 2), 1)
+        self.assertEqual(get_lca(tree_dict(proj8), 5, 3), 1)
+        self.assertEqual(get_lca(tree_dict(proj8), 4, 3), 1)
+        self.assertEqual(get_lca(tree_dict(proj8), 6, -1), -1)
+        self.assertEqual(get_lca(tree_dict(proj8), 1, 2), 1)
+        self.assertEqual(get_lca(tree_dict(proj8), 6, 0), 1)
+
+        self.assertEqual(get_lca(tree_dict(nonproj1), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj1), -1, 0), -1)
+        self.assertEqual(get_lca(tree_dict(nonproj1), 0, -1), -1)
+        self.assertEqual(get_lca(tree_dict(nonproj1), 2, 3), 2)
+        self.assertEqual(get_lca(tree_dict(nonproj1), 1, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj1), 0, 3), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj1), 3, 1), 1)
+
+        self.assertEqual(get_lca(tree_dict(nonproj2), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj2), -1, 0), -1)
+        self.assertEqual(get_lca(tree_dict(nonproj2), 2, 1), 1)
+        self.assertEqual(get_lca(tree_dict(nonproj2), 0, 1), 1)
+        self.assertEqual(get_lca(tree_dict(nonproj2), 2, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj2), 0, -1), -1)
+
+        self.assertEqual(get_lca(tree_dict(nonproj3), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj3), -1, 1), -1)
+        self.assertEqual(get_lca(tree_dict(nonproj3), 2, 1), 2)
+        self.assertEqual(get_lca(tree_dict(nonproj3), 3, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj3), 1, 0), 0)
+
+        self.assertEqual(get_lca(tree_dict(nonproj4), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj4), -1, 3), -1)
+        self.assertEqual(get_lca(tree_dict(nonproj4), 1, 0), 1)
+        self.assertEqual(get_lca(tree_dict(nonproj4), 2, 0), 2)
+        self.assertEqual(get_lca(tree_dict(nonproj4), 3, 2), 2)
+
+        self.assertEqual(get_lca(tree_dict(nonproj5), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj5), -1, 0), -1)
+        self.assertEqual(get_lca(tree_dict(nonproj5), 0, 2), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj5), 2, 1), 1)
+        self.assertEqual(get_lca(tree_dict(nonproj5), 1, 0), 1)
+
+        self.assertEqual(get_lca(tree_dict(nonproj6), 0, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj6), 0, -1), -1)
+        self.assertEqual(get_lca(tree_dict(nonproj6), 4, 0), 0)
+        self.assertEqual(get_lca(tree_dict(nonproj6), 2, 1), 2)
+        self.assertEqual(get_lca(tree_dict(nonproj6), 1, 2), 2)
+        self.assertEqual(get_lca(tree_dict(nonproj6), 3, 1), 3)
+        self.assertEqual(get_lca(tree_dict(nonproj6), 4, 2), 2)
+        self.assertEqual(get_lca(tree_dict(nonproj6), 2, 3), 2)
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
