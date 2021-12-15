@@ -371,24 +371,48 @@ def annotate(tree):
 Least common ancestor. Can be done in O(|pi|) time.
 See Kuhlmann and Satta (2009)
 """
-def get_lca(tree_dict, node_pred, node_succ):
-    lca = -1
-    parent_pred = node_pred
-    parent_succ = node_succ    
+def get_lca(tree_dict, a, b):
+    checked = set([])
 
-    while parent_pred != parent_succ:
-        if tree_dict[parent_pred] == parent_succ: 
-            lca = parent_succ
-            break
-        elif tree_dict[parent_succ] == parent_pred: 
-            lca = parent_pred
-            break
-        else: 
-            parent_pred = tree_dict[parent_pred]
-            parent_succ = tree_dict[parent_succ]
-            lca = parent_succ
+    while a not in checked and b not in checked:
 
-    return lca
+
+        checked.add(a)
+        checked.add(b)
+
+        # can not return directly here, have to wait until the lower one reaches the root
+        if tree_dict[a] != -1:
+            a = tree_dict[a]
+        if tree_dict[b] != -1:
+            b = tree_dict[b]
+        if tree_dict[a] == -1 and tree_dict[b] == -1:
+            return a
+        
+        
+        
+    if a in checked: return a
+    else: return b
+
+    # lca = -1
+    # parent_pred = node_pred
+    # parent_succ = node_succ    
+
+    # while parent_pred != parent_succ:
+    #     if tree_dict[parent_pred] == parent_succ: 
+    #         lca = parent_succ
+    #         break
+    #     elif tree_dict[parent_succ] == parent_pred: 
+    #         lca = parent_pred
+    #         break
+    #     else: 
+    #         parent_pred = tree_dict[parent_pred]
+    #         parent_succ = tree_dict[parent_succ]
+    #         lca = parent_succ
+    #         print("pp =" + str(parent_pred))
+    #         print("ps =" + str(parent_succ))
+        
+
+    # return lca
 
 # TODO: Page 38
 def block_order_collect(order, calls, u):
