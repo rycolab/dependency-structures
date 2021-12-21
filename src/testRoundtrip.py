@@ -1,6 +1,10 @@
 import unittest
+import os
 from unittest.main import main
 from algorithms import *
+from termdep import TreeBank
+
+data_prefix = "../data/"
 
 # projective trees
 proj = []
@@ -24,6 +28,13 @@ nonproj.append(((2, 0), (-1, 1), (1, 2), (0, 3)))
 nonproj.append(((0, 2), (1, 0), (-1, 1)))
 nonproj.append(((0, 2), (3, 4), (-1, 0), (4, 1), (2, 3)))
 
+well_nested = []
+well_nested.append(Tree(((-1,0),(0,1),(0,2),(2,3),(1,4))))
+
+not_well_nested = []
+not_well_nested.append(Tree(((-1,0),(0,1),(0,2),(1,2),(2,4))))
+
+weakly_non_proj = []
 
 class TestRoundTrip(unittest.TestCase):
 
@@ -62,6 +73,19 @@ class TestRoundTrip(unittest.TestCase):
 			term = encode_proj(tree1)
 			tree2 = decode_proj(term)
 			self.diff(tree1, tree2)
+
+	def test_block_roundtrip(self):
+		tb_files = [ "UD_English-ParTUT/en_partut-ud-test.conllu", 
+					  "UD_German-GSD/de_gsd-ud-test.conllu",
+					  "UD_Swiss_German-UZH/gsw_uzh-ud-test.conllu"]
+		for f in tb_files:
+			print("Running roundtrip test for", f)
+			path = os.path.abspath(data_prefix + f)
+			tb = TreeBank(path)
+			for tree in tb.generator():
+				t1 = encode_block(tree)
+				t2 = decode_block(t1)
+				self.same(tree, t2)
 
 if __name__ == '__main__':
     unittest.main()
