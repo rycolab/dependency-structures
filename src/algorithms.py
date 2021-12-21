@@ -373,9 +373,11 @@ See Kuhlmann and Satta (2009)
 """
 def get_lca(tree_dict, a, b):
     checked = set()
+    
 
     while a not in checked and b not in checked:
-
+        if a == b:
+            return a
         if a != -1:
             checked.add(a)
         if b != -1:
@@ -387,12 +389,13 @@ def get_lca(tree_dict, a, b):
         if b != -1:
             b = tree_dict[b]
         if a == -1 and b == -1:
-            return -1
+            break
         
         
     
     if a in checked: return a
-    else: return b
+    elif b in checked: return b
+    else: return -1
 
     # lca = -1
     # parent_pred = node_pred
