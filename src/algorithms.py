@@ -386,8 +386,8 @@ def get_lca(tree_dict, a, b):
             a = tree_dict[a]
         if b != -1:
             b = tree_dict[b]
-        # if tree_dict[a] == -1 and tree_dict[b] == -1:
-        #     return a
+        if a == -1 and b == -1:
+            return -1
         
         
     
