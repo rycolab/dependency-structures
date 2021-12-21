@@ -1,6 +1,10 @@
 import unittest
 from algorithms import *
 
+# weakly non-projective trees
+wnprj1 = ((-1, 2), (2, 3), (2, 1), (1, 4))
+wnprj2 = ((-1, 2), (1, 4), (2, 1), (2, 3)) # same tree, different tuple order
+wnprj3 = ((-1, 3), (3, 4), (4, 2), (2, 5), (5, 1))
 
 # projective trees
 proj1 = ((-1, 0), (0, 4), (1, 3), (3, 2), (4, 1))
@@ -48,7 +52,7 @@ ord6 = [[0], [0,1,2], [2,3], [3], [1,4], [4,5,7], [6], [6,7],
 ord7 = [[0], [0, 1], [1,2,3,5], [3], [4], [4, 5]]
 ord8 = [[0], [0,1,3,4], [2], [2,3], [4, 6], [5], [5, 6]]
 
-term1 = Term((0, 1), Term((1, 0), Term((0, 1), Term((1,0), Term((0), ())))))
+term1 = Term((0, 1), tuple([Term((1, 0), tuple([Term((0, 1), tuple([Term((1,0), tuple([Term(tuple([0]), tuple([]))]))]))]))]))
 
 
 
@@ -116,6 +120,13 @@ class TestProjectivity(unittest.TestCase):
         self.assertEqual(is_well_formed(doubleedge1), False)
         self.assertEqual(is_well_formed(missingdependency1), False)
         self.assertEqual(is_well_formed(missingdependency2), False)
+    
+    def test_is_weakly_nonprojective(self):
+        self.assertEqual(is_weakly_nonprojective(wnprj1), True)
+        self.assertEqual(is_weakly_nonprojective(wnprj2), True)
+        self.assertEqual(is_weakly_nonprojective(wnprj3), True)
+        self.assertEqual(is_weakly_nonprojective(nonproj1), False)
+        self.assertEqual(is_weakly_nonprojective(nonproj4), False)
 
 
 

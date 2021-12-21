@@ -274,12 +274,8 @@ def encode_proj(tree):
 		for i, node in enumerate(order_annotations[root]):
 			if node == root:
 				oa.insert(i, 0)
-				lst.insert(i, None)
 			else:
 				lst.append(term(node))
-
-		# sanity check
-		assert len(oa) == len(lst)
 
 		return Term(tuple(oa), tuple(lst))
 
@@ -343,12 +339,13 @@ def decode_block(tree):
 def is_weakly_nonprojective(tree):
     for i in range(len(tree)):
         for j in range(i+1, len(tree)):
-            # case (a) from the book (pg. 52)
-            if min(tree[i]) < min(tree[j]) < max(tree[i]) < max(tree[j]):
-                return False
-            # case (b) from the book (pg. 52)
-            if min(tree[j]) < min(tree[i]) < max(tree[j]) < max(tree[i]):
-                return False
+            if min(tree[i]) != -1:
+                # case (a) from the book (pg. 52)
+                if min(tree[i]) < min(tree[j]) < max(tree[i]) < max(tree[j]):
+                    return False
+                # case (b) from the book (pg. 52)
+                if min(tree[j]) < min(tree[i]) < max(tree[j]) < max(tree[i]):
+                    return False
     return True
 
 # Chapter 5
@@ -367,3 +364,10 @@ def is_wellnested(tree):
         return False
     
     return not check_forbidden_string(root_term)
+
+term1 = Term((0, 1), tuple([Term((1, 0), Term((0, 1), Term((1,0), Term((0), ()))))]))
+tree1 = ((-1, 0), (0, 4), (1, 3), (3, 2), (4, 1))
+
+output = encode_proj(tree1)
+
+print(len(output.lst))
