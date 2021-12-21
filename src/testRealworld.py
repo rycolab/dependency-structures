@@ -13,33 +13,32 @@ class TestRealworld(unittest.TestCase):
         trees = [Tree(t) for t in tree_bank.generator()]
         return trees
 
-    def test_German_GSD(self):
-        trees = self.importFile("data/UD_German-GSD/de_gsd-ud-dev.conllu")
+    def statistics(self, path: str):
+        trees = self.importFile(path)
+        n_projective = 0
+        n_nonprojective = 0
         for tree in trees:
-            print(tree)
+            # print(tree)
+            if tree.is_projective():
+                n_projective += 1
+                # print("projective")
+            else:
+                n_nonprojective += 1
+                # print("non-prejective")
+        
+        print(path)
+        print("projective:     " + str(n_projective))
+        print("non-projective: " + str(n_nonprojective))
+        fraction = n_projective/(n_projective+n_nonprojective)
+        percentage = fraction * 100
+        print("fraction:       {:.1f}%".format(percentage))
 
-    # TODO: fix the functions to take a tree as input
-    # test whether two trees are the same
-    def same(self, lst1, lst2):
-        set1, set2 = set(lst1), set(lst2)
-        for s in set1:
-            self.assertIn(s, set2)
-        for s in set2:
-            self.assertIn(s, set1)
-
-    # tests whether two trees are different
-    def diff(self, lst1, lst2):
-        def tmp(lst1, lst2):
-            set1, set2 = set(lst1), set(lst2)
-            for s in set1:
-                if s not in set2:
-                    return True
-            for s in set2:
-                if s in set1:
-                    return True
-            return False
-        self.assertTrue(tmp(lst1, lst2))
-
+    def test_English_ParTut(self):
+        self.statistics("data/UD_English-ParTUT/en_partut-ud-dev.conllu")
+    def test_German_GSD(self):
+        self.statistics("data/UD_German-GSD/de_gsd-ud-dev.conllu")
+    def test_Swiss_German_UZH(self):
+        self.statistics("data/UD_Swiss_German-UZH/gsw_uzh-ud-test.conllu")
 
 if __name__ == '__main__':
     unittest.main()
