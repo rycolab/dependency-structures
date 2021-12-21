@@ -37,7 +37,7 @@ Find it on [ACL Anthology](https://aclanthology.org/E09-1055.pdf).
 
 ### Universal Dependencies
 
-Treebanks from [Universal Depndencies](https://universaldependencies.org/).
+Treebanks from [Universal Dependencies](https://universaldependencies.org/).
 
 ## Contributors
 
@@ -60,4 +60,4 @@ Python errors with an `UnicodeEncodeError`. E.g. something like: `UnicodeEncodeE
 
 Use Python 3.6 or newer. [Source](https://docs.python.org/3/whatsnew/3.6.html#whatsnew36-pep528).
 
-If this is absolutely not an option, check this [Stackoverflow answer](https://stackoverflow.com/questions/31685841/unicodeencodeerror-with-windows-console-in-python-3#31686890).
+If this is absolutely not an option, check this [Stack Overflow answer](https://stackoverflow.com/questions/31685841/unicodeencodeerror-with-windows-console-in-python-3#31686890).
