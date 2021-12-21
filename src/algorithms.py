@@ -372,24 +372,25 @@ Least common ancestor. Can be done in O(|pi|) time.
 See Kuhlmann and Satta (2009)
 """
 def get_lca(tree_dict, a, b):
-    checked = set([])
+    checked = set()
 
     while a not in checked and b not in checked:
 
-
-        checked.add(a)
-        checked.add(b)
+        if a != -1:
+            checked.add(a)
+        if b != -1:
+            checked.add(b)
 
         # can not return directly here, have to wait until the lower one reaches the root
-        if tree_dict[a] != -1:
+        if a != -1:
             a = tree_dict[a]
-        if tree_dict[b] != -1:
+        if b != -1:
             b = tree_dict[b]
-        if tree_dict[a] == -1 and tree_dict[b] == -1:
-            return a
+        # if tree_dict[a] == -1 and tree_dict[b] == -1:
+        #     return a
         
         
-        
+    
     if a in checked: return a
     else: return b
 
