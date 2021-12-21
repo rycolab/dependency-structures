@@ -2,7 +2,7 @@
 
 Clone inlcuding submodules directly: `git clone --recurse-submodules [URL]`
 
-Initialize new submodules, e.g. in existing repository: `git submodule update --init --recursive`
+Initialize new existing submodules, e.g. in existing repository: `git submodule update --init --recursive`
 
 (Pull and pull submodules: `git pull --recurse-submodules`)
 

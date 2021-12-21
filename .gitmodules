@@ -7,3 +7,6 @@
 [submodule "data/UD_Swiss_German-UZH"]
 	path = data/UD_Swiss_German-UZH
 	url = git@github.com:UniversalDependencies/UD_Swiss_German-UZH.git
+[submodule "data/UD_Danish-DDT"]
+	path = data/UD_Danish-DDT
+	url = git@github.com:UniversalDependencies/UD_Danish-DDT.git
